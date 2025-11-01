@@ -1,0 +1,62 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: user-profile
+  namespace: strimzi
+  labels:
+    strimzi.io/cluster: "my-cluster"
+    app: user-service
+    environment: poc
+    data-type: profile
+    criticality: high
+  annotations:
+    description: "User profile data with latest state, using log compaction for storage efficiency"
+    owner: "user-team@company.com"
+    created-by: "poc-declarative-topics"
+    retention-policy: "compact-with-delete"
+spec:
+  partitions: 6
+  replicas: 3
+  config:
+    # Retention settings for compacted topic
+    retention.ms: -1 # Unlimited time retention (compaction-based)
+    retention.bytes: -1 # Unlimited bytes retention
+    segment.bytes: 1073741824 # 1GB segment size
+
+    # Cleanup policy - compaction with deletion for tombstones
+    cleanup.policy: "compact,delete"
+    delete.retention.ms: 86400000 # 1 day retention for deleted records
+    min.compaction.lag.ms: 3600000 # 1 hour minimum compaction lag
+    max.compaction.lag.ms: 86400000 # 1 day maximum compaction lag
+
+    # Compaction settings
+    min.cleanable.dirty.ratio: 0.01 # Compact when only 1% of log is dirty (more frequent)
+    segment.ms: 86400000 # Roll segments daily for better compaction
+
+    # Performance settings
+    compression.type: "lz4" # LZ4 compression for good balance of speed/ratio
+    max.message.bytes: 1048576 # 1MB max message size for profile data
+
+    # Replication and durability
+    min.insync.replicas: 2 # Require at least 2 replicas for writes
+    unclean.leader.election.enable: false # Prevent data loss
+
+    # Index settings for efficient key-based lookups
+    index.interval.bytes: 4096 # Index every 4KB
+    max.index.bytes: 10485760 # 10MB max index size
+
+    # Consumer and producer settings
+    message.timestamp.type: "LogAppendTime" # Use server time for timestamps
+    message.timestamp.difference.max.ms: 9223372036854775807 # No limit on timestamp difference
+
+    # Throttling to prevent overwhelming consumers
+    produce.request.timeout.ms: 30000 # 30 second timeout for produces
+    fetch.max.bytes: 52428800 # 50MB max fetch size for batch processing
+
+    # Additional settings for profile data patterns
+    enable.auto.commit: false # Manual commit for better control
+    auto.offset.reset: "earliest" # Start from beginning for new consumers
+
+    # Monitoring and observability
+    log.message.format.version: "3.5" # Use latest message format
+    log.message.timestamp.type: "LogAppendTime"

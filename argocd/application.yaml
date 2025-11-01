@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-topics
+  namespace: argocd
+  labels:
+    app: kafka-topics
+    environment: poc
+    managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: CreateNamespace=true
+    description: "Declarative Kafka Topics management using GitOps"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your-org/poc-kafka-topics.git
+    targetRevision: HEAD
+    path: topics
+    directory:
+      recurse: true
+      jsonnet: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: strimzi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+    - group: kafka.strimzi.io
+      kind: KafkaTopic
+      jsonPointers:
+        - /status
+  revisionHistoryLimit: 3

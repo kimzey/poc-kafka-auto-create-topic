@@ -1,0 +1,101 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: my-cluster
+  namespace: strimzi
+  labels:
+    app: strimzi
+    component: kafka
+spec:
+  # Use KRaft mode (no ZooKeeper) for simpler deployment
+  kafka:
+    version: 3.5.0
+    replicas: 3
+    listeners:
+      # Plain text listener for internal communication
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      # TLS listener for secure communication
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+      # External listener for outside cluster access
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: false
+        configuration:
+          bootstrap:
+            nodePort: 30092
+          brokers:
+            - broker: 0
+              nodePort: 30101
+            - broker: 1
+              nodePort: 30102
+            - broker: 2
+              nodePort: 30103
+    # Kafka broker configuration
+    config:
+      # Replication settings for durability
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+
+      # Performance tuning
+      num.network.threads: 8
+      num.io.threads: 16
+      socket.send.buffer.bytes: 102400
+      socket.receive.buffer.bytes: 102400
+      socket.request.max.bytes: 104857600
+
+      # Log settings
+      log.segment.bytes: 1073741824 # 1GB
+      log.retention.check.interval.ms: 300000 # 5 minutes
+      log.retention.hours: 168 # 7 days default
+
+      # Resource limits
+      connections.max.idle.ms: 600000
+
+      # Security settings
+      auto.create.topics.enable: false
+
+    # Storage configuration
+    storage:
+      type: jbod
+      volumes:
+        - id: 0
+          type: persistent-claim
+          size: 100Gi
+          deleteClaim: false
+
+    # Resource allocation
+    resources:
+      requests:
+        memory: 4Gi
+        cpu: 2000m
+      limits:
+        memory: 6Gi
+        cpu: 4000m
+
+    # JVM settings
+    jvmOptions:
+      -Xms: 4096m
+      -Xmx: 4096m
+      server: true
+
+  # Enable Entity Operator for Topic and User management
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+
+  # Kafka Exporter for monitoring
+  kafkaExporter:
+    enable: true
+    groupRegex: ".*"
+    topicRegex: ".*"
+    logging: true
