@@ -65,6 +65,33 @@ install_argocd() {
     fi
 }
 
+# Optional: create a permissive NetworkPolicy for argocd-server (helps with restrictive clusters)
+create_network_policy() {
+    print_step "Applying argocd-server NetworkPolicy (permissive) ..."
+    cat <<'EOF' | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: argocd-server-network-policy
+  namespace: argocd
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 8083
+  egress:
+  - {}
+EOF
+}
+
 # Wait for Argo CD to be ready
 wait_for_argocd() {
     print_step "Waiting for Argo CD components to be ready..."
@@ -76,12 +103,24 @@ wait_for_argocd() {
         deployment/argocd-server \
         --namespace argocd
 
-    # Wait for Argo CD application controller
-    print_status "Waiting for argocd-application-controller..."
-    kubectl wait --for=condition=Available \
-        --timeout=300s \
-        deployment/argocd-application-controller \
-        --namespace argocd
+    # Wait for Argo CD application controller (StatefulSet in v2.8+)
+    print_status "Waiting for argocd-application-controller (StatefulSet)..."
+    # Fast-path: if already ready, don't block
+    local desired ready
+    desired=$(kubectl -n argocd get sts/argocd-application-controller -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "")
+    ready=$(kubectl -n argocd get sts/argocd-application-controller -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
+    if [ -n "$desired" ] && [ "${ready:-0}" = "$desired" ]; then
+        echo "statefulset.apps/argocd-application-controller condition met"
+    elif ! kubectl wait --for=condition=Ready --timeout=600s statefulset/argocd-application-controller -n argocd; then
+        print_warning "kubectl wait on StatefulSet failed; falling back to rollout status and pod readiness"
+        # Fallback 1: rollout status
+        if ! kubectl rollout status statefulset/argocd-application-controller -n argocd --timeout=600s; then
+            print_warning "rollout status did not report success; checking pod readiness by label"
+        fi
+        # Fallback 2: wait for at least 1 controller pod Ready
+        kubectl wait -n argocd --for=condition=Ready pod \
+            -l app.kubernetes.io/name=argocd-application-controller --timeout=600s || true
+    fi
 
     # Wait for Argo CD repo server
     print_status "Waiting for argocd-repo-server..."
@@ -105,8 +144,16 @@ wait_for_argocd() {
 configure_access() {
     print_step "Configuring Argo CD external access..."
 
-    # Create LoadBalancer service for Argo CD server (for kind, we'll use NodePort)
-    kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"NodePort","ports":[{"name":"http","port":80,"targetPort":8080,"nodePort":30080},{"name":"https","port":443,"targetPort":8080,"nodePort":30443}]}}'
+    # Expose argocd-server via NodePort for kind
+    kubectl patch svc argocd-server -n argocd --type='merge' -p '{
+      "spec": {
+        "type": "NodePort",
+        "ports": [
+          {"name":"http","port":80,"targetPort":8080,"nodePort":30080},
+          {"name":"https","port":443,"targetPort":8083,"nodePort":30443}
+        ]
+      }
+    }'
 
     print_status "Argo CD server configured for external access on:"
     echo "  HTTP: http://localhost:30080"
@@ -144,9 +191,11 @@ verify_installation() {
     print_status "Checking Argo CD services..."
     kubectl get svc -n argocd
 
-    # Check deployments
+    # Check deployments and statefulsets
     print_status "Checking Argo CD deployments..."
     kubectl get deployments -n argocd
+    print_status "Checking Argo CD statefulsets..."
+    kubectl get statefulset -n argocd
 
     print_status "Argo CD installation verification completed!"
 }
@@ -226,6 +275,7 @@ main() {
 
     check_prerequisites
     install_argocd
+    create_network_policy
     wait_for_argocd
     configure_access
     get_admin_password

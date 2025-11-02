@@ -18,7 +18,7 @@ metadata:
     sla-tier: "silver"
 spec:
   partitions: 24 # Higher partition count for better parallelism
-  replicas: 3
+  replicas: 1
   config:
     # Retention settings - shorter retention for high-volume data
     retention.ms: 86400000 # 24 hours in milliseconds
@@ -29,50 +29,30 @@ spec:
     cleanup.policy: "delete" # Delete old segments only
     delete.retention.ms: 3600000 # 1 hour retention for deleted records
 
-    # Performance tuning for high throughput
+    # Performance tuning for high throughput (topic-level only)
     compression.type: "zstd" # Best compression ratio for high volume
     max.message.bytes: 1048576 # 1MB max message size
-    batch.size: 65536 # 64KB batch size for better throughput
-    linger.ms: 5 # Small linger time for batching without too much delay
 
-    # I/O settings for high throughput
-    num.io.threads: 8 # More I/O threads
-    num.network.threads: 4 # More network threads
-    socket.send.buffer.bytes: 102400 # 100KB send buffer
-    socket.receive.buffer.bytes: 65536 # 64KB receive buffer
-    socket.request.max.bytes: 104857600 # 100MB max request size
+    # Remove broker-level I/O thread/socket settings (not topic-scoped)
 
     # Replication and durability
-    min.insync.replicas: 2 # Require at least 2 replicas for writes
-    unclean.leader.election.enable: false # Prevent data loss
-    acks: "all" # Wait for all replicas
+    min.insync.replicas: 1 # Single-broker kind cluster
 
-    # Consumer settings optimized for throughput
-    fetch.min.bytes: 1024 # Minimum bytes to fetch
-    fetch.max.wait.ms: 500 # Max wait time for fetch
-    max.partition.fetch.bytes: 1048576 # 1MB max per partition
+    # Remove consumer client configs (not topic-scoped)
 
     # Index and segment settings
     index.interval.bytes: 8192 # Index every 8KB for better performance
     segment.ms: 3600000 # Roll segments every hour
 
     # Monitoring and observability
-    message.timestamp.type: "CreateTime" # Use producer time for inventory updates
-    message.timestamp.difference.max.ms: 300000 # 5 minute max timestamp difference
+    message.timestamp.type: "CreateTime"
 
-    # Throttling and flow control
-    producer.quota.window.num: 10 # 10 quota windows
-    producer.quota.window.size.seconds: 1 # 1 second windows
+    # Remove quota policies (broker-level)
 
-    # Additional performance settings
-    log.cleaner.enable: false # Disable log cleaner for delete-only policy
-    log.flush.interval.messages: 10000 # Flush every 10K messages
-    log.flush.interval.ms: 1000 # Flush at least every second
+    # Additional performance settings (topic-level only)
+    flush.messages: 10000 # Flush every 10K messages
+    flush.ms: 1000 # Flush at least every second
 
-    # Security and reliability
-    enable.idempotence: true # Enable idempotent producer
-    max.in.flight.requests.per.connection: 5 # Allow in-flight requests
+    # Remove producer client configs (not topic-scoped)
 
-    # Background operations
-    log.retention.check.interval.ms: 300000 # Check retention every 5 minutes
-    log.segment.delete.delay.ms: 60000 # Delete segments after 1 minute
+    # Background operations (broker-level defaults removed)

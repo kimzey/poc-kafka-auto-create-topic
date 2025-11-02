@@ -234,8 +234,12 @@ deploy_kafka() {
 
     cd "$PROJECT_DIR"
 
+    # Allow overriding the Kafka manifest (e.g., kind profile)
+    KAFKA_MANIFEST=${KAFKA_MANIFEST:-kafka/kafka-cluster-kind.yaml}
+    print_status "Using manifest: $KAFKA_MANIFEST"
+
     # Apply Kafka cluster configuration
-    kubectl apply -f kafka/kafka-cluster.yaml
+    kubectl apply -f "$KAFKA_MANIFEST"
 
     print_status "Waiting for Kafka cluster to be ready..."
 

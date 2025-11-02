@@ -1,0 +1,78 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: my-cluster
+  namespace: strimzi
+  annotations:
+    strimzi.io/node-pools: "enabled"
+  labels:
+    app: strimzi
+    component: kafka
+spec:
+  kafka:
+    # Single-broker, KRaft mode for local kind (NodePools)
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+      - name: external
+        port: 9094
+        type: nodeport
+        tls: false
+        configuration:
+          bootstrap:
+            nodePort: 30092
+          brokers:
+            - broker: 0
+              nodePort: 30101
+    config:
+      # Single-broker friendly replication
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
+      default.replication.factor: 1
+      min.insync.replicas: 1
+
+      # Keep other defaults light
+      auto.create.topics.enable: false
+
+    jvmOptions:
+      xms: 512m
+      xmx: 512m
+
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+
+  kafkaExporter:
+    groupRegex: ".*"
+    topicRegex: ".*"
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaNodePool
+metadata:
+  name: my-cluster-all
+  namespace: strimzi
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  # Combined roles on a single node for kind
+  replicas: 1
+  roles:
+    - controller
+    - broker
+  storage:
+    type: ephemeral
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: 500m

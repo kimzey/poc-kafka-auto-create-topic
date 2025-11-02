@@ -16,7 +16,7 @@ metadata:
     retention-policy: "7-days"
 spec:
   partitions: 12
-  replicas: 3
+  replicas: 1
   config:
     # Retention settings
     retention.ms: 604800000  # 7 days in milliseconds
@@ -33,13 +33,11 @@ spec:
     min.compaction.lag.ms: 0  # No minimum compaction lag
 
     # Replication and durability
-    min.insync.replicas: 2  # Require at least 2 replicas for writes
-    unclean.leader.election.enable: false  # Prevent data loss
+    min.insync.replicas: 1  # Single-broker kind cluster
 
     # Consumer settings
     min.cleanable.dirty.ratio: 0.5  # Compact when 50% of log is dirty
     index.interval.bytes: 4096  # Index every 4KB
 
     # Monitoring and metrics
-    message.timestamp.type: "LogAppendTime"  # Use server time for timestamps
-    message.timestamp.difference.max.ms: 9223372036854775807  # No limit on timestamp difference
+    message.timestamp.type: "LogAppendTime"

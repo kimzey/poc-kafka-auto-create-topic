@@ -21,12 +21,15 @@ scripts/
 ## 🚀 ลำดับการทำงานที่แนะนำ
 
 ### สำหรับผู้ใช้ macOS (แนะนำ)
+
 ```bash
 ./scripts/setup-macos.sh
 ```
+
 Script นี้จะรันทุกขั้นตอนโดยอัตโนมัติตั้งแต่เริ่มจนจบ
 
 ### สำหรับการติดตั้งแบบ manual
+
 ```bash
 # 1. สร้าง Kubernetes cluster
 ./scripts/setup-kind.sh
@@ -50,6 +53,7 @@ Script นี้จะรันทุกขั้นตอนโดยอัต�
 **วัตถุประสงค์:** One-click setup สำหรับผู้ใช้ macOS ที่ต้องการติดตั้งระบบทั้งหมด
 
 **หน้าที่หลัก:**
+
 - ✅ ตรวจสอบความพร้อมของระบบ (macOS version, memory, disk space)
 - 📦 ติดตั้ง Homebrew ถ้ายังไม่มี
 - 🛠️ ติดตั้งเครื่องมือที่จำเป็น (kind, kubectl, helm, git)
@@ -61,12 +65,14 @@ Script นี้จะรันทุกขั้นตอนโดยอัต�
 - 📋 แสดงข้อมูลการเข้าถึงและขั้นตอนถัดไป
 
 **วิธีใช้งาน:**
+
 ```bash
 chmod +x scripts/setup-macos.sh
 ./scripts/setup-macos.sh
 ```
 
 **ผลลัพธ์ที่ได้:**
+
 - Kubernetes cluster พร้อมใช้งาน
 - Strimzi Operator ติดตั้งแล้ว
 - Argo CD พร้อม UI ที่ http://localhost:30080
@@ -80,6 +86,7 @@ chmod +x scripts/setup-macos.sh
 **วัตถุประสงค์:** สร้าง Kubernetes cluster ในเครื่องโดยใช้ kind (Kubernetes in Docker)
 
 **หน้าที่หลัก:**
+
 - 🔍 ตรวจสอบ prerequisites (kind, kubectl, docker)
 - 🗑️ ลบ cluster เก่า (ถ้ามี)
 - 🏗️ สร้าง cluster ใหม่ชื่อ "kafka-poc"
@@ -90,8 +97,9 @@ chmod +x scripts/setup-macos.sh
 **Configuration ที่ใช้:** `scripts/kind-config.yaml`
 
 **Port mappings ที่สร้าง:**
+
 - HTTP/HTTPS: 80/443
-- Kafka Internal: 9092/9093  
+- Kafka Internal: 9092/9093
 - Kafka External: 30092/30093
 - Argo CD UI: 30080
 
@@ -102,6 +110,7 @@ chmod +x scripts/setup-macos.sh
 **วัตถุประสงค์:** ติดตั้ง Strimzi Kafka Operator สำหรับจัดการ Kafka บน Kubernetes
 
 **หน้าที่หลัก:**
+
 - ✅ ตรวจสอบ prerequisites (kubectl, helm)
 - 🏷️ สร้าง namespace "strimzi"
 - 📥 เพิ่ม Strimzi Helm repository
@@ -110,6 +119,7 @@ chmod +x scripts/setup-macos.sh
 - 🔍 ตรวจสอบ CRDs และ installation
 
 **Features ที่ติดตั้ง:**
+
 - `watchAnyNamespace=true` - ดูทุก namespace
 - Support สำหรับ Kafka, KafkaTopic, KafkaUser resources
 - Auto-reconciliation และ self-healing
@@ -121,11 +131,12 @@ chmod +x scripts/setup-macos.sh
 **วัตถุประสงค์:** ติดตั้ง Argo CD สำหรับ GitOps workflow
 
 **หน้าที่หลัก:**
+
 - 🏷️ สร้าง namespace "argocd"
 - 📥 ติดตั้ง Argo CD จาก official manifest (v2.8.3)
 - ⏳ รอให้ components พร้อมใช้งาน:
   - argocd-server
-  - argocd-application-controller  
+  - argocd-application-controller
   - argocd-repo-server
   - argocd-redis
 - 🔌 ตั้งค่า external access ผ่าน NodePort
@@ -133,6 +144,7 @@ chmod +x scripts/setup-macos.sh
 - 🛠️ ติดตั้ง Argo CD CLI (optional)
 
 **Access Information:**
+
 - UI: http://localhost:30080 (HTTP) / https://localhost:30443 (HTTPS)
 - Username: admin
 - Password: ถูกเซฟในไฟล์ `argocd-admin-password.txt`
@@ -155,6 +167,7 @@ chmod +x scripts/setup-macos.sh
 8. **Config Validation** - ทดสอบการ reject invalid config
 
 **รายงานผล:**
+
 - สรุปจำนวน tests ที่ผ่าน/ไม่ผ่าน
 - รายละเอียดผลการทดสอบแต่ละข้อ
 - สถานะ cluster และจำนวน topics ปัจจุบัน
@@ -166,6 +179,7 @@ chmod +x scripts/setup-macos.sh
 **วัตถุประสงค์:** ตรวจสอบความถูกต้องของไฟล์ YAML ทั้งหมดใน project
 
 **หน้าที่หลัก:**
+
 - 📖 ตรวจสอบ YAML syntax ด้วย yq
 - 🔍 ตรวจสอบความถูกต้องตาม resource type:
   - **Kafka:** version, replicas, storage config
@@ -175,6 +189,7 @@ chmod +x scripts/setup-macos.sh
 - 📊 สรุปผลการตรวจสอบ
 
 **วิธีใช้งาน:**
+
 ```bash
 # ตรวจสอบทุกไฟล์
 ./scripts/validate-yaml.sh
@@ -190,6 +205,7 @@ chmod +x scripts/setup-macos.sh
 **วัตถุประสงค์:** Configuration สำหรับ kind cluster
 
 **การตั้งค่าหลัก:**
+
 - Single control-plane node
 - Port mappings สำหรับ external access
 - Ingress-ready node label
@@ -200,12 +216,14 @@ chmod +x scripts/setup-macos.sh
 ## 🔧 ข้อกำหนดเบื้องต้น (Prerequisites)
 
 ### สำหรับ macOS
+
 - macOS 10.15+ (Catalina ขึ้นไป)
 - 8GB+ RAM (แนะนำ)
 - 10GB+ disk space
 - Docker Desktop (4GB+ memory allocated)
 
 ### เครื่องมือที่จำเป็น
+
 - Git
 - Terminal/Shell (zsh/bash)
 
@@ -216,11 +234,13 @@ chmod +x scripts/setup-macos.sh
 ## 🚨 Troubleshooting
 
 ### ปัญหาทั่วไป
+
 1. **Docker ไม่ทำงาน** - ตรวจสอบว่า Docker Desktop เปิดอยู่
 2. **Memory ไม่พอ** - จัดสรรให้ Docker อย่างน้อย 4GB
 3. **Port ถูกใช้** - ปิด service อื่นๆ ที่ใช้ ports ดังกล่าว
 
 ### การ Reset ระบบ
+
 ```bash
 # ลบ kind cluster
 kind delete cluster --name kafka-poc
@@ -243,11 +263,13 @@ kubectl delete namespace strimzi argocd --ignore-not-found=true
 ## 🤝 การสนับสนุน
 
 หากพบปัญหาให้:
+
 1. ตรวจสอบ log files ในโฟลเดอร์ `logs/`
 2. รัน `./scripts/validate-yaml.sh` เพื่อตรวจสอบ configuration
 3. ตรวจสอบ pod status: `kubectl get pods --all-namespaces`
 4. ดู events: `kubectl get events --all-namespaces --sort-by=.metadata.creationTimestamp`
-```
+
+````
 
 ```markdown
 # 📖 คู่มือการใช้งาน Scripts - รายละเอียดแต่ละไฟล์
@@ -277,9 +299,10 @@ cd poc-kafka-auto-create-topic
 
 # 2. รัน script เดียวจบ!
 ./scripts/setup-macos.sh
-```
+````
 
 **Script นี้จะทำทุกอย่างให้:**
+
 - ✅ ติดตั้งเครื่องมือที่จำเป็นทั้งหมด
 - ✅ สร้าง Kubernetes cluster
 - ✅ ติดตั้ง Strimzi และ Argo CD
@@ -319,9 +342,11 @@ cd poc-kafka-auto-create-topic
 ### 1. 🖥️ setup-macos.sh - Script หลักสำหรับ macOS
 
 #### 🎯 วัตถุประสงค์
+
 เป็น script หลักที่ออกแบบมาเพื่อให้ผู้ใช้ macOS สามารถติดตั้ง POC นี้ได้ด้วยคำสั่งเดียว
 
 #### ⚡ Features ที่น่าสนใจ
+
 - 🔍 **Auto-detect Architecture** รองรับทั้ง Intel และ Apple Silicon (M1/M2/M3)
 - 📦 **Automatic Homebrew Installation** ติดตั้ง Homebrew ถ้ายังไม่มี
 - 🛠️ **Tool Management** ติดตั้ง/อัปเดต tools ที่จำเป็นทั้งหมด
@@ -347,6 +372,7 @@ cd poc-kafka-auto-create-topic
 ```
 
 #### 📋 Output ที่ได้
+
 ```text
 🎉 POC setup completed successfully!
 
@@ -365,6 +391,7 @@ Kafka Cluster:
 ```
 
 #### ⚠️ ข้อควรระวัง
+
 - ต้องใช้ macOS เท่านั้น
 - ต้องมีอินเทอร์เน็ตสำหรับ download tools
 - Docker Desktop ต้องเปิดก่อนรัน script
@@ -374,9 +401,11 @@ Kafka Cluster:
 ### 2. ⚙️ setup-kind.sh - สร้าง Kubernetes Cluster
 
 #### 🎯 วัตถุประสงค์
+
 สร้าง Kubernetes cluster ในเครื่องโดยใช้ kind (Kubernetes in Docker) สำหรับรัน POC
 
 #### ⚡ Features ที่สำคัญ
+
 - 🗑️ **Auto-cleanup** ลบ cluster เก่าอัตโนมัติ
 - 🌐 **Ingress Support** ติดตั้ง ingress-nginx สำหรับ external access
 - 🔌 **Port Forwarding** กำหนด ports สำหรับ Kafka และ Argo CD
@@ -384,27 +413,29 @@ Kafka Cluster:
 
 #### 📋 Port Mappings ที่สร้าง
 
-| Service | Container Port | Host Port | Description |
-|---------|----------------|----------|-------------|
-| HTTP    | 80             | 80       | Ingress HTTP traffic |
-| HTTPS   | 443            | 443      | Ingress HTTPS traffic |
-| Kafka Internal | 9092    | 9092     | Kafka bootstrap (internal) |
-| Kafka Internal | 9093    | 9093     | Kafka brokers (internal) |
-| Kafka External | 30092    | 30092     | Kafka external access |
-| Kafka External | 30093    | 30093     | Kafka external access |
-| Argo CD UI | 30080     | 30080     | Argo CD web interface |
+| Service        | Container Port | Host Port | Description                |
+| -------------- | -------------- | --------- | -------------------------- |
+| HTTP           | 80             | 80        | Ingress HTTP traffic       |
+| HTTPS          | 443            | 443       | Ingress HTTPS traffic      |
+| Kafka Internal | 9092           | 9092      | Kafka bootstrap (internal) |
+| Kafka Internal | 9093           | 9093      | Kafka brokers (internal)   |
+| Kafka External | 30092          | 30092     | Kafka external access      |
+| Kafka External | 30093          | 30093     | Kafka external access      |
+| Argo CD UI     | 30080          | 30080     | Argo CD web interface      |
 
 #### 🔧 Configuration Details
+
 ```yaml
 # scripts/kind-config.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-- role: control-plane
-  extraPortMappings: # ... port mappings above
+  - role: control-plane
+    extraPortMappings: # ... port mappings above
 ```
 
 #### 📊 การตรวจสอบหลังติดตั้ง
+
 ```bash
 # ตรวจสอบ cluster
 kubectl cluster-info
@@ -421,15 +452,19 @@ docker port kafka-poc-control-plane
 ### 3. 📦 install-strimzi.sh - Kafka Operator Installation
 
 #### 🎯 วัตถุประสงค์
+
 ติดตั้ง Strimzi Kafka Operator ซึ่งเป็น Kubernetes operator สำหรับจัดการ Apache Kafka
 
 #### 🧩 Strimzi คืออะไร?
+
 Strimzi เป็นโปรเจกต์ open source ที่ทำให้ Apache Kafka สามารถรันบน Kubernetes ได้อย่างง่ายดาย โดยมี:
+
 - **Kafka Operator** จัดการ Kafka cluster lifecycle
 - **Custom Resources** สำหรับ Kafka, KafkaTopic, KafkaUser
 - **Automation** สำหรับ deployment, scaling, upgrading
 
 #### ⚡ Features ที่ติดตั้ง
+
 - 🎛️ **Operator Controller** จัดการ Kafka resources
 - 📋 **Custom Resource Definitions (CRDs)** สำหรับ declarative config
 - 🔍 **Watch All Namespaces** `watchAnyNamespace=true`
@@ -437,6 +472,7 @@ Strimzi เป็นโปรเจกต์ open source ที่ทำให�
 - 📊 **Metrics & Monitoring** สนับสนุน Prometheus
 
 #### 🏗️ Architecture ที่ติดตั้ง
+
 ```text
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────┐
 │   Kafka CRDs    │    │ Strimzi Operator │    │ Kafka Pods  │
@@ -449,6 +485,7 @@ Strimzi เป็นโปรเจกต์ open source ที่ทำให�
 ```
 
 #### 📦 Installation Process
+
 ```bash
 # 1. สร้าง namespace
 kubectl create namespace strimzi
@@ -464,10 +501,11 @@ helm install strimzi-kafka-operator strimzi/strimzi-kafka-operator \
 ```
 
 #### 🎯 CRDs ที่ติดตั้งมาด้วย
+
 ```bash
 kubectl get crd | grep strimzi
 # kafkas.kafka.strimzi.io
-# kafkatopics.kafka.strimzi.io  
+# kafkatopics.kafka.strimzi.io
 # kafkausers.kafka.strimzi.io
 # kafkabridges.kafka.strimzi.io
 # kafkarebalances.kafka.strimzi.io
@@ -480,16 +518,20 @@ kubectl get crd | grep strimzi
 ### 4. 🚀 install-argocd.sh - GitOps Tool Installation
 
 #### 🎯 วัตถุประสงค์
+
 ติดตั้ง Argo CD สำหรับ GitOps workflow ในการจัดการ Kafka Topics
 
 #### 🤔 GitOps คืออะไร?
+
 GitOps คือ practice การใช้ Git เป็น "single source of truth" สำหรับ:
+
 - **Declarative Configuration** ทุกอย่างอยู่ใน Git
 - **Automated Deployment** changes ใน Git จะถูก apply อัตโนมัติ
 - **Version Control** มีประวัติการเปลี่ยนแปลงทั้งหมด
 - **Audit Trail** สามารถตรวจสอบใครแก้อะไรได้
 
 #### ⚡ Argo CD Features
+
 - 🎯 **Application Management** จัดการ Kubernetes apps
 - 🔄 **Automatic Sync** sync changes จาก Git อัตโนมัติ
 - 🎨 **Beautiful UI** web interface สำหรับ monitoring
@@ -498,6 +540,7 @@ GitOps คือ practice การใช้ Git เป็น "single source of 
 - 🔄 **Rollback** ย้อนกลับ version เก่าได้
 
 #### 🏗️ Architecture
+
 ```text
 ┌──────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Git Repository │    │   Argo CD Server │    │ Kubernetes      │
@@ -516,6 +559,7 @@ GitOps คือ practice การใช้ Git เป็น "single source of 
 ```
 
 #### 📦 Installation Process
+
 ```bash
 # 1. Create namespace
 kubectl create namespace argocd
@@ -534,6 +578,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 ```
 
 #### 🎨 UI Features
+
 - 📊 **Dashboard Overview** ดูสถานะทั้งหมด
 - 📋 **Application List** จัดการ apps
 - 🔍 **Resource Tree** ดู hierarchy ของ resources
@@ -546,11 +591,13 @@ kubectl -n argocd get secret argocd-initial-admin-secret \
 ### 5. 🧪 test-topics.sh - ระบบทดสอบอัตโนมัติ
 
 #### 🎯 วัตถุประสงค์
+
 ทดสอบการทำงานของ Kafka Topics แบบ Declarative อย่างครอบคลุม เพื่อให้มั่นใจว่าระบบทำงานถูกต้อง
 
 #### 🧪 Test Suites (8 Tests)
 
 ##### Test 1: Topic Creation 🆕
+
 ```yaml
 # สร้าง KafkaTopic resource
 apiVersion: kafka.strimzi.io/v1beta2
@@ -564,11 +611,13 @@ spec:
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ KafkaTopic resource ถูกสร้าง
 - ✅ Topic status = Ready
 - ✅ Topic มีอยู่ใน Kafka cluster
 
 ##### Test 2: Configuration Update ⚙️
+
 ```bash
 # อัปเดต partitions จาก 3 → 6
 kubectl patch kafkatopic test-topic-creation \
@@ -576,10 +625,12 @@ kubectl patch kafkatopic test-topic-creation \
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ Partitions เพิ่มจาก 3 เป็น 6
 - ✅ Topic ยังคงทำงานปกติ
 
 ##### Test 3: Message Flow 📨
+
 ```bash
 # ส่งข้อความ
 echo "test-message-$(date +%s)" | \
@@ -593,20 +644,24 @@ kubectl exec my-cluster-kafka-0 -- \
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ Message ถูกส่งและรับสำเร็จ
 - ✅ ข้อมูลไม่สูญหาย
 
 ##### Test 4: Topic Deletion 🗑️
+
 ```bash
 # ลบ topic
 kubectl delete kafkatopic test-topic-creation
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ KafkaTopic resource ถูกลบ
 - ✅ Topic หายไปจาก Kafka cluster
 
 ##### Test 5: Idempotent Operations 🔄
+
 ```bash
 # สร้าง topic เดิมซ้ำ (ไม่ควร error)
 kubectl apply -f topic.yaml  # ครั้งที่ 1
@@ -614,10 +669,12 @@ kubectl apply -f topic.yaml  # ครั้งที่ 2
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ การรันซ้ำไม่ทำให้ error
 - ✅ State คงเดิม
 
 ##### Test 6: Argo CD Sync 🚀
+
 ```bash
 # ตรวจสอบ Argo CD application
 kubectl get application kafka-topics -n argocd \
@@ -625,10 +682,12 @@ kubectl get application kafka-topics -n argocd \
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ Argo CD app healthy
 - ✅ Sync status = Synced
 
 ##### Test 7: Batch Creation 📦
+
 ```bash
 # สร้างทุก topics ในโฟลเดอร์ topics/
 for file in topics/*.yaml; do
@@ -637,28 +696,32 @@ done
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ ทุกไฟล์ถูก apply สำเร็จ
 - ✅ ทุก topics ถูกสร้าง
 
 ##### Test 8: Validation ✅
+
 ```yaml
 # สร้าง invalid config (ควรถูก reject)
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 spec:
-  replicas: 5  # มากกว่า brokers
+  replicas: 5 # มากกว่า brokers
   config:
-    retention.ms: -1000  # ค่าไม่ถูกต้อง
+    retention.ms: -1000 # ค่าไม่ถูกต้อง
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ Invalid config ถูก reject
 - ✅ Error message ชัดเจน
 
 #### 📊 รายงานผลการทดสอบ
+
 ```text
 ==============================================
-           TEST EXECUTION REPORT            
+           TEST EXECUTION REPORT
 ==============================================
 
 Summary:
@@ -685,17 +748,20 @@ Detailed Results:
 ### 6. ✅ validate-yaml.sh - YAML Validation
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบความถูกต้องของ YAML files ทั้งหมดใน project ก่อนการ deploy
 
 #### 🔍 ประเภทการตรวจสอบ
 
 ##### 1. Syntax Validation
+
 ```bash
 # ใช้ yq ตรวจสอบ YAML syntax
 yq eval '.' file.yaml > /dev/null
 ```
 
 ##### 2. Structure Validation
+
 ```bash
 # ตรวจสอบ required fields
 api_version=$(yq eval '.apiVersion' file.yaml)
@@ -706,41 +772,45 @@ name=$(yq eval '.metadata.name' file.yaml)
 ##### 3. Type-specific Validation
 
 **Kafka Cluster:**
+
 ```yaml
 # ที่ต้องตรวจสอบ
 spec:
   kafka:
-    version: "3.5.0"  # ✅ ต้องระบุ version
-    replicas: 3       # ✅ ควร >= 3 สำหรับ production
+    version: "3.5.0" # ✅ ต้องระบุ version
+    replicas: 3 # ✅ ควร >= 3 สำหรับ production
     storage:
-      type: jbod      # ✅ ต้องมี storage config
+      type: jbod # ✅ ต้องมี storage config
 ```
 
 **KafkaTopic:**
+
 ```yaml
 # ที่ต้องตรวจสอบ
 spec:
-  partitions: 3       # ✅ ต้อง >= 1
-  replicas: 3         # ✅ ต้อง >= 1, <= brokers
+  partitions: 3 # ✅ ต้อง >= 1
+  replicas: 3 # ✅ ต้อง >= 1, <= brokers
   config:
-    retention.ms: 3600000  # ✅ ควร >= 0
+    retention.ms: 3600000 # ✅ ควร >= 0
 metadata:
   labels:
-    strimzi.io/cluster: "my-cluster"  # ✅ จำเป็น
+    strimzi.io/cluster: "my-cluster" # ✅ จำเป็น
 ```
 
 **Argo CD Application:**
+
 ```yaml
 # ที่ต้องตรวจสอบ
 spec:
   source:
-    repoURL: "https://github.com/user/repo.git"  # ✅ ต้อง HTTPS
-    path: "topics"                             # ✅ ต้องมี path
+    repoURL: "https://github.com/user/repo.git" # ✅ ต้อง HTTPS
+    path: "topics" # ✅ ต้องมี path
   destination:
-    server: "https://kubernetes.default.svc"    # ✅ ต้องระบุ
+    server: "https://kubernetes.default.svc" # ✅ ต้องระบุ
 ```
 
 #### 📋 การตรวจสอบโดยละเอียด
+
 ```bash
 ./scripts/validate-yaml.sh
 
@@ -770,6 +840,7 @@ Validation Summary:
 ```
 
 #### 🎯 Best Practices ที่ตรวจสอบ
+
 - **Security:** ไม่มี hardcoded secrets
 - **Resource Limits:** มีการกำหนด resources สำหรับ production
 - **High Availability:** Kafka replicas >= 3
@@ -781,9 +852,11 @@ Validation Summary:
 ### 7. ⚙️ kind-config.yaml - Cluster Configuration
 
 #### 🎯 วัตถุประสงค์
+
 Configuration file สำหรับ kind cluster กำหนดโครงสร้างและการเชื่อมต่อ
 
 #### 📋 Configuration Breakdown
+
 ```yaml
 # 1. Cluster metadata
 kind: Cluster
@@ -791,46 +864,48 @@ apiVersion: kind.x-k8s.io/v1alpha4
 
 # 2. Node configuration
 nodes:
-- role: control-plane  # Single node cluster
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"  # Mark node for ingress
+  - role: control-plane # Single node cluster
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"  # Mark node for ingress
 
 # 3. Port mappings
 extraPortMappings:
-- containerPort: 80      # HTTP traffic
-  hostPort: 80
-  protocol: TCP
-- containerPort: 443     # HTTPS traffic  
-  hostPort: 443
-  protocol: TCP
-- containerPort: 9092   # Kafka internal
-  hostPort: 9092
-  protocol: TCP
-- containerPort: 9093   # Kafka brokers
-  hostPort: 9093
-  protocol: TCP
-- containerPort: 30092  # Kafka external access
-  hostPort: 30092
-  protocol: TCP
-- containerPort: 30093  # Kafka external access
-  hostPort: 30093
-  protocol: TCP
-- containerPort: 30080  # Argo CD UI
-  hostPort: 30080
-  protocol: TCP
+  - containerPort: 80 # HTTP traffic
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443 # HTTPS traffic
+    hostPort: 443
+    protocol: TCP
+  - containerPort: 9092 # Kafka internal
+    hostPort: 9092
+    protocol: TCP
+  - containerPort: 9093 # Kafka brokers
+    hostPort: 9093
+    protocol: TCP
+  - containerPort: 30092 # Kafka external access
+    hostPort: 30092
+    protocol: TCP
+  - containerPort: 30093 # Kafka external access
+    hostPort: 30093
+    protocol: TCP
+  - containerPort: 30080 # Argo CD UI
+    hostPort: 30080
+    protocol: TCP
 ```
 
 #### 🎯 Design Decisions
 
 ##### Single Node Cluster
+
 - **Pros:** ใช้ resources น้อย, setup ง่าย, เหมาะกับ POC
 - **Cons:** ไม่มี HA, ไม่เหมาะ production
 
 ##### Port Forwarding Strategy
+
 ```text
 Internal Services    →    External Access
 ────────────────────          ──────────────────
@@ -842,9 +917,11 @@ Port 30092 (Kafka)   →    localhost:30092
 ```
 
 ##### Ingress-ready Node
+
 ```yaml
 node-labels: "ingress-ready=true"
 ```
+
 ช่วยให้ ingress-nginx controller สามารถ schedule pods ได้ถูกต้อง
 
 ---
@@ -854,6 +931,7 @@ node-labels: "ingress-ready=true"
 ### 📋 ปัญหาที่พบบ่อยและวิธีแก้ไข
 
 #### 1. Docker Related Issues
+
 ```bash
 # ❌ Problem: Docker Desktop not running
 Error: Cannot connect to the Docker daemon
@@ -865,6 +943,7 @@ Error: Cannot connect to the Docker daemon
 ```
 
 #### 2. Memory Issues
+
 ```bash
 # ❌ Problem: Insufficient memory
 Error: Kubernetes cluster failed to start
@@ -877,6 +956,7 @@ Error: Kubernetes cluster failed to start
 ```
 
 #### 3. Port Conflicts
+
 ```bash
 # ❌ Problem: Port already in use
 Error: bind: address already in use
@@ -890,6 +970,7 @@ netstat -tulpn | grep :30080
 ```
 
 #### 4. Permission Issues
+
 ```bash
 # ❌ Problem: Permission denied
 Error: permission denied while trying to connect to Docker daemon
@@ -901,6 +982,7 @@ sudo ./scripts/setup-kind.sh
 ```
 
 #### 5. Network Issues
+
 ```bash
 # ❌ Problem: Cannot download tools
 Error: Failed to connect to raw.githubusercontent.com
@@ -915,6 +997,7 @@ export http_proxy=http://proxy.company.com:8080
 ```
 
 #### 6. Kubernetes Cluster Issues
+
 ```bash
 # ❌ Problem: Cluster not ready
 kubectl get nodes
@@ -931,6 +1014,7 @@ kind delete cluster --name kafka-poc
 ```
 
 #### 7. Pod Crashes
+
 ```bash
 # ❌ Problem: Pods keep restarting
 kubectl get pods --all-namespaces
@@ -944,6 +1028,7 @@ kubectl logs <pod-name> -n <namespace> --previous
 ### 🔄 Reset & Clean Scripts
 
 #### Full Reset (Delete Everything)
+
 ```bash
 #!/bin/bash
 # reset-all.sh
@@ -966,6 +1051,7 @@ echo "✅ Reset completed!"
 ```
 
 #### Partial Reset
+
 ```bash
 # Reset Kubernetes only
 kind delete cluster --name kafka-poc
@@ -983,17 +1069,20 @@ kubectl delete kafkatopic --all -n strimzi
 ## 📚 เอกสารอ้างอิงและลิงก์ที่เกี่ยวข้อง
 
 ### 📖 Official Documentation
+
 - **Strimzi:** https://strimzi.io/docs/
 - **Argo CD:** https://argoproj.github.io/argo-cd/
 - **Kind:** https://kind.sigs.k8s.io/
 - **Kafka:** https://kafka.apache.org/documentation/
 
 ### 🎯 Best Practices
+
 - **Kubernetes Best Practices:** https://kubernetes.io/docs/concepts/configuration/overview/
 - **GitOps Patterns:** https://www.weave.works/technologies/gitops/
 - **Kafka Operations:** https://www.confluent.io/blog/kafka-best-practices/
 
 ### 🔧 Useful Commands Cheat Sheet
+
 ```bash
 # Kubernetes
 kubectl get all --all-namespaces
@@ -1020,19 +1109,23 @@ docker exec -it kafka-poc-control-plane bash
 ## 🤝 การสนับสนุนและการมีส่วนร่วม
 
 ### 📋 รายงานปัญหา
+
 หากพบปัญหา:
+
 1. ตรวจสอบ `logs/` สำหรับ error messages
 2. รัน `./scripts/validate-yaml.sh` สำหรับ syntax errors
 3. ตรวจสอดู pod status และ events
 4. รวบรวมข้อมูล: OS version, Docker version, error logs
 
 ### 🔄 การมีส่วนร่วม
+
 - Fork repository
 - สร้าง feature branch
 - Add tests สำหรับ changes
 - Submit pull request
 
 ### 📧 ติดต่อ
+
 - GitHub Issues: สำหรับ bug reports
 - Wiki: สำหรับ documentation improvements
 - Discussions: สำหรับ questions และ ideas
@@ -1042,7 +1135,8 @@ docker exec -it kafka-poc-control-plane bash
 **🎉 ขอบคุณที่ใช้งาน POC Declarative Kafka Topics!**
 
 หวังว่าเอกสารนี้จะช่วยให้คุณเข้าใจและใช้งาน scripts ต่างๆ ได้อย่างมีประสิทธิภาพครับ
-```
+
+````
 
 ```markdown
 # 📖 คู่มือ Script: setup-macos.sh
@@ -1064,12 +1158,14 @@ if [[ "$ARCH" == "arm64" ]]; then
 else
     BREW_PREFIX="/usr/local"    # Intel
 fi
-```
+````
+
 - **รองรับทุก Mac:** Intel และ Apple Silicon (M1, M2, M3)
 - **Auto-configure:** ตั้งค่า paths ตาม hardware อัตโนมัติ
 - **Version Check:** ตรวจสอบ macOS version compatibility
 
 ### 📦 One-Click Tool Installation
+
 ```bash
 # ติดตั้ง tools ที่จำเป็นทั้งหมด
 tools=("kind" "kubectl" "helm" "git")
@@ -1079,11 +1175,13 @@ for tool in "${tools[@]}"; do
     fi
 done
 ```
+
 - **Homebrew Management:** ติดตั้ง/อัปเดต Homebrew อัตโนมัติ
 - **Dependency Resolution:** ติดตั้ง tools ที่ขาดหายไปเท่านั้น
 - **Latest Versions:** ใช้ latest stable versions
 
 ### 🎨 Beautiful Output และ Progress Tracking
+
 ```bash
 print_header() {
     echo -e "${PURPLE}"
@@ -1094,6 +1192,7 @@ print_header() {
     echo -e "${NC}"
 }
 ```
+
 - **Colored Output:** ใช้สีเพื่อความชัดเจน
 - **Progress Indicators:** แสดงขั้นตอนการทำงาน
 - **ASCII Art:** Logo และ headers สวยงาม
@@ -1125,35 +1224,38 @@ graph TD
 ### 📋 ขั้นตอนการทำงานโดยละเอียด
 
 #### 1️⃣ Phase 1: Environment Preparation
+
 ```bash
 check_macos_requirements() {
     # ตรวจสอบ macOS version
     MACOS_VERSION=$(sw_vers -productVersion)
-    
+
     # ตรวจสอบ architecture
     ARCH=$(uname -m)
-    
+
     # ตรวจสอง memory
     MEMORY_GB=$(( $(sysctl -n hw.memsize) / 1024 / 1024 / 1024 ))
-    
+
     # ตรวจสอบ disk space
     DISK_FREE=$(df -h / | awk 'NR==2 {print $4}' | sed 's/G//')
 }
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ macOS version (ต้องเป็น 10.15+)
 - ✅ Architecture (Intel vs Apple Silicon)
 - ✅ Available RAM (ขอแนะนำ 8GB+)
 - ✅ Disk space (ต้องมีอย่างน้อย 10GB)
 
 #### 2️⃣ Phase 2: Tool Installation
+
 ```bash
 install_homebrew() {
     if ! command -v brew &> /dev/null; then
         # Download และติดตั้ง Homebrew
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        
+
         # Add to PATH ตาม architecture
         if [[ "$ARCH" == "arm64" ]]; then
             echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
@@ -1165,6 +1267,7 @@ install_homebrew() {
 ```
 
 #### 3️⃣ Phase 3: Docker Verification
+
 ```bash
 verify_docker() {
     if docker info &> /dev/null; then
@@ -1178,11 +1281,12 @@ verify_docker() {
 ```
 
 #### 4️⃣ Phase 4: Project Setup
+
 ```bash
 setup_project() {
     # Make scripts executable
     chmod +x scripts/*.sh
-    
+
     # Create necessary directories
     mkdir -p logs
     mkdir -p backups
@@ -1190,6 +1294,7 @@ setup_project() {
 ```
 
 #### 5️⃣ Phase 5: Cluster & Services Installation
+
 ```bash
 run_kind_setup() {
     if ./scripts/setup-kind.sh 2>&1 | tee logs/setup-kind.log; then
@@ -1202,17 +1307,19 @@ run_kind_setup() {
 ```
 
 #### 6️⃣ Phase 6: Application Deployment
+
 ```bash
 deploy_kafka() {
     # Apply Kafka cluster configuration
     kubectl apply -f kafka/kafka-cluster.yaml
-    
+
     # Wait for readiness
     kubectl wait kafka/my-cluster --for=condition=Ready --timeout=600s -n strimzi
 }
 ```
 
 #### 7️⃣ Phase 7: Testing & Validation
+
 ```bash
 run_tests() {
     if ./scripts/test-topics.sh 2>&1 | tee logs/test-topics.log; then
@@ -1244,6 +1351,7 @@ chmod +x scripts/setup-macos.sh
 ### 📋 ข้อกำหนดเบื้องต้น
 
 #### Hardware Requirements
+
 ```text
 ✅ macOS 10.15+ (Catalina ขึ้นไป)
 ✅ Intel หรือ Apple Silicon (M1/M2/M3)
@@ -1253,6 +1361,7 @@ chmod +x scripts/setup-macos.sh
 ```
 
 #### Software Requirements
+
 ```text
 ✅ Xcode Command Line Tools (จะถูกติดตั้งอัตโนมัติ)
 ✅ Docker Desktop (ต้องเปิดก่อนรัน)
@@ -1263,6 +1372,7 @@ chmod +x scripts/setup-macos.sh
 ## 📊 Output และผลลัพธ์
 
 ### 🎨 Screen Output Example
+
 ```text
 ╔══════════════════════════════════════════════════════════════╗
 ║         Declarative Kafka Topics POC - macOS Setup          ║
@@ -1319,6 +1429,7 @@ chmod +x scripts/setup-macos.sh
 ```
 
 ### 📋 Final Information Display
+
 ```text
 🎉 POC setup completed successfully!
 
@@ -1358,6 +1469,7 @@ Next Steps:
 ## 🔧 Configuration และ Customization
 
 ### 🎛️ Environment Variables
+
 ```bash
 # สามารถ override ค่าเหล่านี้ได้
 export SCRIPT_DIR="/custom/path"
@@ -1366,7 +1478,9 @@ export CLUSTER_NAME="my-custom-cluster"
 ```
 
 ### 📝 Log Files
+
 Script จะสร้าง log files ในโฟลเดอร์ `logs/`:
+
 ```bash
 logs/
 ├── setup-kind.log      # Log จาก kind setup
@@ -1376,6 +1490,7 @@ logs/
 ```
 
 ### 🎨 Customization Options
+
 ```bash
 # ถ้าต้องการข้ามขั้นตอนบางอย่าง
 SKIP_TESTS=true ./scripts/setup-macos.sh
@@ -1391,6 +1506,7 @@ MIN_MEMORY_GB=4 ./scripts/setup-macos.sh
 ### 🔍 ปัญหาที่พบบ่อยบน Mac
 
 #### 1️⃣ Homebrew Installation Issues
+
 ```bash
 # ❌ Problem: Permission denied
 /bin/bash: Permission denied
@@ -1402,6 +1518,7 @@ sudo chown -R $(whoami) /usr/local/Homebrew
 ```
 
 #### 2️⃣ Docker Desktop on Apple Silicon
+
 ```bash
 # ❌ Problem: Docker daemon not responding
 Error: Cannot connect to the Docker daemon
@@ -1414,6 +1531,7 @@ Error: Cannot connect to the Docker daemon
 ```
 
 #### 3️⃣ Xcode Command Line Tools
+
 ```bash
 # ❌ Problem: xcrun error
 xcrun: error: invalid active developer path
@@ -1425,6 +1543,7 @@ sudo xcode-select --reset
 ```
 
 #### 4️⃣ Rosetta 2 สำหรับ Apple Silicon
+
 ```bash
 # ❌ Problem: Intel tools ไม่ทำงาน
 Bad CPU type in executable
@@ -1434,6 +1553,7 @@ softwareupdate --install-rosetta --agree-to-license
 ```
 
 #### 5️⃣ Port Conflicts บน macOS
+
 ```bash
 # ❌ Problem: Port 30080 already in use
 bind: address already in use
@@ -1445,6 +1565,7 @@ kill -9 <PID>
 ```
 
 ### 🧪 Debug Mode
+
 ```bash
 # เปิด debug mode เพื่อดูข้อมูลเพิ่มเติม
 DEBUG=true ./scripts/setup-macos.sh
@@ -1454,6 +1575,7 @@ set -x  # Add ที่บรรทัดแรก
 ```
 
 ### 🔄 Reset และ Reinstall
+
 ```bash
 # Full reset
 rm -rf logs/
@@ -1469,12 +1591,14 @@ kind delete cluster --name kafka-poc
 ## 📚 เอกสารประกอบเพิ่มเติม
 
 ### 🔗 ลิงก์ที่เกี่ยวข้อง
+
 - **Homebrew:** https://brew.sh/
 - **Docker Desktop for Mac:** https://docs.docker.com/docker-for-mac/
 - **Kind on macOS:** https://kind.sigs.k8s.io/docs/user/known-issues/#docker-desktop
 - **Apple Silicon & Docker:** https://docs.docker.com/docker-for-mac/apple-silicon/
 
 ### 📖 Best Practices สำหรับ Mac Users
+
 - เสมอตรวจสอบ Docker Desktop version
 - จัดสรร memory ให้เพียงพอ (8GB+)
 - ใช้ latest macOS เพื่อความเข้ากันได้
@@ -1483,6 +1607,7 @@ kind delete cluster --name kafka-poc
 ---
 
 **🎉 เมื่อ script ทำงานเสร็จสมบูรณ์ คุณจะมี:**
+
 - ✅ Kubernetes cluster พร้อมใช้งาน
 - ✅ Strimzi Kafka Operator ที่ทำงาน
 - ✅ Argo CD พร้อม UI
@@ -1490,7 +1615,8 @@ kind delete cluster --name kafka-poc
 - ✅ GitOps workflow สำหรับ topics management
 - ✅ Complete test results
 - ✅ Documentation และ access information
-```
+
+````
 
 ```markdown
 # 📖 คู่มือ Script: setup-kind.sh
@@ -1528,13 +1654,14 @@ kind delete cluster --name kafka-poc
 │  │ Kubernetes Cluster (kafka-poc)      │    │
 │  └─────────────────────────────────────┘    │
 └─────────────────────────────────────────────┘
-```
+````
 
 ---
 
 ## 🏗️ การทำงานของ Script
 
 ### 🔄 Execution Flow
+
 ```mermaid
 graph TD
     A[Start Script] --> B[Check Prerequisites]
@@ -1551,6 +1678,7 @@ graph TD
 ### 📋 ขั้นตอนการทำงานโดยละเอียด
 
 #### 1️⃣ Phase 1: Prerequisites Check
+
 ```bash
 check_prerequisites() {
     # ตรวจสอบว่าติดตั้ง kind แล้ว
@@ -1558,13 +1686,13 @@ check_prerequisites() {
         print_error "kind is not installed. Please install it first: brew install kind"
         exit 1
     fi
-    
+
     # ตรวจสอบ kubectl
     if ! command -v kubectl &> /dev/null; then
         print_error "kubectl is not installed. Please install it first: brew install kubectl"
         exit 1
     fi
-    
+
     # ตรวจสอบ Docker
     if ! docker info &> /dev/null; then
         print_error "Docker is not running. Please start Docker Desktop"
@@ -1574,12 +1702,14 @@ check_prerequisites() {
 ```
 
 **สิ่งที่ตรวจสอบ:**
+
 - ✅ `kind` binary ติดตั้งแล้ว
-- ✅ `kubectl` binary ติดตั้งแล้ว  
+- ✅ `kubectl` binary ติดตั้งแล้ว
 - ✅ Docker daemon กำลังทำงาน
 - ✅ User มีสิทธิ์ในการใช้ Docker
 
 #### 2️⃣ Phase 2: Cluster Management
+
 ```bash
 create_cluster() {
     # ลบ cluster เก่าถ้ามี
@@ -1594,6 +1724,7 @@ create_cluster() {
 ```
 
 #### 3️⃣ Phase 3: Cluster Configuration
+
 ```bash
 configure_cluster() {
     # รอให้ nodes พร้อม
@@ -1618,64 +1749,67 @@ configure_cluster() {
 
 ```yaml
 # scripts/kind-config.yaml
-kind: Cluster                    # ประเภท resource: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4  # API version ของ kind
+kind: Cluster # ประเภท resource: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4 # API version ของ kind
 
 nodes:
-- role: control-plane            # Single node cluster (control-plane + worker)
-  kubeadmConfigPatches:          # Custom configuration สำหรับ kubeadm
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"  # Label สำหรับ ingress controller
-  
-  extraPortMappings:             # Port forwarding จาก host → container
-  # HTTP/HTTPS สำหรับ ingress
-  - containerPort: 80           # Port ใน container
-    hostPort: 80                 # Port บน host machine
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
-    
-  # Kafka internal ports
-  - containerPort: 9092         # Kafka bootstrap
-    hostPort: 9092
-    protocol: TCP
-  - containerPort: 9093         # Kafka brokers
-    hostPort: 9093
-    protocol: TCP
-    
-  # Kafka external access
-  - containerPort: 30092        # External Kafka access
-    hostPort: 30092
-    protocol: TCP
-  - containerPort: 30093
-    hostPort: 30093
-    protocol: TCP
-    
-  # Argo CD UI
-  - containerPort: 30080        # Argo CD web interface
-    hostPort: 30080
-    protocol: TCP
+  - role: control-plane # Single node cluster (control-plane + worker)
+    kubeadmConfigPatches: # Custom configuration สำหรับ kubeadm
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"  # Label สำหรับ ingress controller
+
+    extraPortMappings: # Port forwarding จาก host → container
+      # HTTP/HTTPS สำหรับ ingress
+      - containerPort: 80 # Port ใน container
+        hostPort: 80 # Port บน host machine
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP
+
+      # Kafka internal ports
+      - containerPort: 9092 # Kafka bootstrap
+        hostPort: 9092
+        protocol: TCP
+      - containerPort: 9093 # Kafka brokers
+        hostPort: 9093
+        protocol: TCP
+
+      # Kafka external access
+      - containerPort: 30092 # External Kafka access
+        hostPort: 30092
+        protocol: TCP
+      - containerPort: 30093
+        hostPort: 30093
+        protocol: TCP
+
+      # Argo CD UI
+      - containerPort: 30080 # Argo CD web interface
+        hostPort: 30080
+        protocol: TCP
 ```
 
 ### 🎯 Design Decisions
 
 #### Single Node vs Multi-Node
+
 **เราเลือก Single Node เพราะ:**
+
 - 💾 **Resource Efficient:** ใช้ memory น้อยกว่า
 - ⚡ **Fast Startup:** เริ่มทำงานได้เร็ว
 - 🔧 **Simple Setup:** ง่ายต่อการจัดการ
 - 📦 **POC Focused:** เหมาะสำหรับ development และ testing
 
 #### Port Mapping Strategy
+
 ```text
 Service Type           Container Port    Host Port    Purpose
 ────────────────────────────────────────────────────────────────
 HTTP Traffic           80               80           Ingress HTTP
-HTTPS Traffic          443              443          Ingress HTTPS  
+HTTPS Traffic          443              443          Ingress HTTPS
 Kafka Bootstrap        9092             9092         Kafka internal
 Kafka Brokers          9093             9093         Kafka brokers
 Kafka External         30092            30092        External access
@@ -1701,6 +1835,7 @@ chmod +x scripts/setup-kind.sh
 ```
 
 ### 📊 Output ตัวอย่าง
+
 ```text
 [INFO] Starting Kafka POC cluster setup...
 
@@ -1755,38 +1890,41 @@ Next steps:
 ### 🎛️ Custom kind-config.yaml
 
 #### Multi-Node Configuration
+
 ```yaml
 # ถ้าต้องการ multi-node cluster
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-- role: control-plane
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-- role: worker  # Add worker nodes
-- role: worker  # Add another worker
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+  - role: worker # Add worker nodes
+  - role: worker # Add another worker
 ```
 
 #### Custom Image Configuration
+
 ```yaml
 # ใช้ custom Kubernetes version
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-- role: control-plane
-  image: kindest/node:v1.27.3  # Custom version
-  extraPortMappings: [...]
+  - role: control-plane
+    image: kindest/node:v1.27.3 # Custom version
+    extraPortMappings: [...]
 ```
 
 ### 🐳 Docker Network Configuration
+
 ```bash
 # ตรวจสอบ Docker networks
 docker network ls
@@ -1805,6 +1943,7 @@ docker network create kafka-poc-net
 ### 🔍 ปัญหาที่พบบ่อย
 
 #### 1️⃣ Docker Issues
+
 ```bash
 # ❌ Problem: Docker daemon not running
 Error: Cannot connect to the Docker daemon
@@ -1816,10 +1955,11 @@ Error: Cannot connect to the Docker daemon
 ```
 
 #### 2️⃣ Port Conflicts
+
 ```bash
 # ❌ Problem: Port already in use
-Error: failed to create cluster: node "kafka-poc-control-plane" failed: 
-failed to create container: Error response from daemon: 
+Error: failed to create cluster: node "kafka-poc-control-plane" failed:
+failed to create container: Error response from daemon:
 driver failed programming external connectivity on endpoint
 
 # ✅ Solution:
@@ -1833,6 +1973,7 @@ kill -9 <PID>
 ```
 
 #### 3️⃣ Resource Issues
+
 ```bash
 # ❌ Problem: Insufficient memory
 Error: context deadline exceeded
@@ -1845,6 +1986,7 @@ Error: context deadline exceeded
 ```
 
 #### 4️⃣ Permission Issues
+
 ```bash
 # ❌ Problem: Permission denied
 Error: permission denied while trying to connect to Docker daemon
@@ -1858,6 +2000,7 @@ sudo ./scripts/setup-kind.sh
 ```
 
 #### 5️⃣ Network Issues
+
 ```bash
 # ❌ Problem: Cluster not accessible
 kubectl get nodes
@@ -1876,6 +2019,7 @@ kubectl config current-context
 ```
 
 ### 🧪 Debug Mode
+
 ```bash
 # เปิด verbose output
 ./scripts/setup-kind.sh -v
@@ -1887,6 +2031,7 @@ set -e  # Exit on error
 ```
 
 ### 🔄 Reset และ Cleanup
+
 ```bash
 # ลบ cluster เท่านั้น
 kind delete cluster --name kafka-poc
@@ -1909,6 +2054,7 @@ docker rm $(docker ps -aq --filter "name=kind-")
 ## 📊 Monitoring และ Maintenance
 
 ### 📈 การตรวจสอบ Cluster Health
+
 ```bash
 # ตรวจสอบสถานะ cluster
 kubectl cluster-info
@@ -1924,6 +2070,7 @@ kubectl get events --sort-by=.metadata.creationTimestamp
 ```
 
 ### 🔍 การตรวจสอบ Resources
+
 ```bash
 # ดู resource usage
 kubectl top nodes
@@ -1937,6 +2084,7 @@ docker system df
 ```
 
 ### 📝 Log Management
+
 ```bash
 # ดู logs ของ kind container
 docker logs kafka-poc-control-plane
@@ -1953,6 +2101,7 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 ## 🎯 Best Practices
 
 ### 🏗️ Production Considerations
+
 ```yaml
 # สำหรับ production ควรพิจารณา:
 - Use multi-node clusters
@@ -1963,6 +2112,7 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
 ```
 
 ### 🔒 Security Best Practices
+
 ```bash
 # 1. ใช้ latest versions
 kind update check
@@ -1978,6 +2128,7 @@ brew update && brew upgrade kind kubectl
 ```
 
 ### 💾 Resource Optimization
+
 ```yaml
 # สำหรับ machines จำกัด resources:
 - ใช้ single node cluster
@@ -1991,17 +2142,20 @@ brew update && brew upgrade kind kubectl
 ## 📚 เอกสารประกอบเพิ่มเติม
 
 ### 🔗 Official Documentation
+
 - **Kind Documentation:** https://kind.sigs.k8s.io/
 - **Kubernetes in Docker:** https://kind.sigs.k8s.io/docs/user/quick-start/
 - **Port Forwarding:** https://kind.sigs.k8s.io/docs/user/configuration/#port-mapping
 
 ### 🎯 Use Cases
+
 - **Development:** สร้าง isolated environments
 - **Testing:** CI/CD pipelines
 - **Learning:** ศึกษา Kubernetes
 - **POC:** Prototyping และ demonstrations
 
 ### 🔄 Alternatives
+
 - **minikube:** VM-based, ใช้ resources มากกว่า
 - **k3d:** Rancher's k3s in Docker
 - **microk8s:** Canonical's lightweight Kubernetes
@@ -2010,11 +2164,13 @@ brew update && brew upgrade kind kubectl
 ---
 
 **🎉 เมื่อ script ทำงานเสร็จ คุณจะได้:**
-- ✅ Kubernetes cluster ชื่อ "kafka-poc"  
+
+- ✅ Kubernetes cluster ชื่อ "kafka-poc"
 - ✅ Ingress controller พร้อมใช้งาน
 - ✅ Port mappings สำหรับ Kafka และ Argo CD
 - ✅ Environment พร้อมสำหรับติดตั้ง Strimzi และ Argo CD
-```
+
+````
 
 ```markdown
 # 📖 คู่มือ Script: install-strimzi.sh
@@ -2043,14 +2199,14 @@ graph TB
             RC[Reconciler Loop]
             WH[Webhook Validator]
         end
-        
+
         subgraph "Kafka Resources"
             K[Kafka Cluster]
             Z[Zookeeper]
             B[Brokers]
             E[Entity Operator]
         end
-        
+
         subgraph "Custom Resources"
             KR[Kafka Resource]
             KTR[KafkaTopic Resources]
@@ -2058,12 +2214,12 @@ graph TB
             KBR[KafkaBridge Resources]
         end
     end
-    
+
     subgraph "User"
         YML[YAML Files]
         KUB[kubectl]
     end
-    
+
     YML --> KUB
     KUB --> KR
     KR --> OC
@@ -2075,13 +2231,14 @@ graph TB
     WH --> KTR
     WH --> KUR
     WH --> KBR
-```
+````
 
 ---
 
 ## 🏗️ การทำงานของ Script
 
 ### 🔄 Execution Flow
+
 ```mermaid
 graph TD
     A[Start Script] --> B[Check Prerequisites]
@@ -2098,6 +2255,7 @@ graph TD
 ### 📋 ขั้นตอนการทำงานโดยละเอียด
 
 #### 1️⃣ Phase 1: Prerequisites Check
+
 ```bash
 check_prerequisites() {
     # ตรวจสอบ kubectl connection
@@ -2115,6 +2273,7 @@ check_prerequisites() {
 ```
 
 #### 2️⃣ Phase 2: Environment Preparation
+
 ```bash
 install_strimzi_operator() {
     # สร้าง namespace สำหรับ Strimzi
@@ -2138,21 +2297,23 @@ install_strimzi_operator() {
 ### 🎛️ Configuration ที่ใช้
 
 #### Helm Chart Values
+
 ```yaml
 # Values ที่กำหนดใน script
-watchAnyNamespace: true      # ดูทุก namespaces ไม่ใช่แค่ strimzi
+watchAnyNamespace: true # ดูทุก namespaces ไม่ใช่แค่ strimzi
 image:
-  registry: quay.io          # Docker registry
+  registry: quay.io # Docker registry
   repository: strimzi/operator
-  tag: 0.35.1               # Specific version
-timeout: 10m                 # Installation timeout
+  tag: 0.35.1 # Specific version
+timeout: 10m # Installation timeout
 ```
 
 #### Namespace Strategy
+
 ```yaml
 # สร้าง namespace "strimzi" สำหรับ:
 - Operator deployment
-- Kafka cluster resources  
+- Kafka cluster resources
 - Related configurations
 - Isolation from other services
 ```
@@ -2162,6 +2323,7 @@ timeout: 10m                 # Installation timeout
 ## 📦 Strimzi Components ที่ติดตั้ง
 
 ### 🎯 Operator Core Components
+
 ```text
 strimzi-kafka-operator/
 ├── Deployment: strimzi-kafka-operator
@@ -2177,6 +2339,7 @@ strimzi-kafka-operator/
 ```
 
 ### 📋 Custom Resource Definitions (CRDs)
+
 ```bash
 # CRDs ที่ติดตั้งมาด้วย
 kubectl get crd | grep strimzi
@@ -2194,15 +2357,16 @@ kubectl get crd | grep strimzi
 ```
 
 ### 🏗️ Operator Features
+
 ```yaml
 Features:
-- watchAnyNamespace: true    # Monitor ทุก namespaces
-- Automated reconciliation     # Auto-fix issues
-- Validation webhooks         # Validate configurations
-- Event recording             # Kubernetes events
-- Metrics exposure           # Prometheus metrics
-- Leader election            # HA support
-- TLS configuration         # Security features
+  - watchAnyNamespace: true # Monitor ทุก namespaces
+  - Automated reconciliation # Auto-fix issues
+  - Validation webhooks # Validate configurations
+  - Event recording # Kubernetes events
+  - Metrics exposure # Prometheus metrics
+  - Leader election # HA support
+  - TLS configuration # Security features
 ```
 
 ---
@@ -2223,6 +2387,7 @@ chmod +x scripts/install-strimzi.sh
 ```
 
 ### 📊 Output ตัวอย่าง
+
 ```text
 [INFO] Starting Strimzi Operator installation...
 
@@ -2289,6 +2454,7 @@ Next steps:
 ## 🎯 การใช้งานหลังติดตั้ง
 
 ### 📋 การสร้าง Kafka Cluster
+
 ```yaml
 # kafka/kafka-cluster.yaml
 apiVersion: kafka.strimzi.io/v1beta2
@@ -2333,6 +2499,7 @@ spec:
 ```
 
 ### 📋 การสร้าง Kafka Topic
+
 ```yaml
 # topics/example-topic.yaml
 apiVersion: kafka.strimzi.io/v1beta2
@@ -2351,6 +2518,7 @@ spec:
 ```
 
 ### 🔍 การตรวจสอบสถานะ
+
 ```bash
 # ตรวจสอบ Kafka cluster
 kubectl get kafka -n strimzi
@@ -2373,6 +2541,7 @@ kubectl logs -n strimzi deployment/strimzi-kafka-operator
 ## 🔧 Advanced Configuration
 
 ### 🎛️ Custom Helm Values
+
 ```yaml
 # custom-values.yaml
 # สำหรับการติดตั้งแบบ customized
@@ -2409,6 +2578,7 @@ readinessProbe:
 ```
 
 ### 🔐 Security Configuration
+
 ```yaml
 # kafka-cluster-with-security.yaml
 spec:
@@ -2431,6 +2601,7 @@ spec:
 ```
 
 ### 📊 Monitoring Setup
+
 ```yaml
 # monitoring.yaml
 apiVersion: kafka.strimzi.io/v1beta2
@@ -2457,6 +2628,7 @@ spec:
 ### 🔍 ปัญหาที่พบบ่อย
 
 #### 1️⃣ Operator ไม่พร้อมใช้งาน
+
 ```bash
 # ❌ Problem: Pod ไม่ขึ้น
 kubectl get pods -n strimzi
@@ -2470,10 +2642,11 @@ kubectl get events -n strimzi --sort-by=.metadata.creationTimestamp
 ```
 
 #### 2️⃣ CRDs ไม่ถูกติดตั้ง
+
 ```bash
 # ❌ Problem: ไม่พบ Kafka resource
 kubectl apply -f kafka/kafka-cluster.yaml
-# error: error validating "kafka-cluster.yaml": 
+# error: error validating "kafka-cluster.yaml":
 # error validating data: couldn't find type: v1beta2.kafka
 
 # ✅ Solution: ตรวจสอบและติดตั้ง CRDs
@@ -2482,6 +2655,7 @@ kubectl apply -f https://github.com/strimzi/strimzi-kafka-operator/releases/down
 ```
 
 #### 3️⃣ Namespace Issues
+
 ```bash
 # ❌ Problem: Cluster ถูกสร้างใน namespace ผิด
 kubectl get kafka -A
@@ -2494,6 +2668,7 @@ kubectl create namespace strimzi
 ```
 
 #### 4️⃣ Resource Limits
+
 ```bash
 # ❌ Problem: Pending states due to insufficient resources
 kubectl get pods -n strimzi
@@ -2506,6 +2681,7 @@ kubectl top nodes
 ```
 
 #### 5️⃣ Storage Issues
+
 ```bash
 # ❌ Problem: PVC ไม่สามารถ bound
 kubectl get pvc -n strimzi
@@ -2518,6 +2694,7 @@ kubectl apply -f storage-class.yaml
 ```
 
 ### 🧪 Debug Mode
+
 ```bash
 # เปิด debug logs สำหรับ operator
 kubectl patch deployment strimzi-kafka-operator -n strimzi \
@@ -2528,6 +2705,7 @@ kubectl logs -n strimzi -f deployment/strimzi-kafka-operator
 ```
 
 ### 🔄 Reset และ Reinstall
+
 ```bash
 # ลบ Strimzi เท่านั้น
 helm uninstall strimzi-kafka-operator -n strimzi
@@ -2545,6 +2723,7 @@ kubectl delete crd kafkas.kafka.strimzi.io kafkatopics.kafka.strimzi.io kafkause
 ## 📊 Performance และ Monitoring
 
 ### 📈 การตรวจสอป Performance
+
 ```bash
 # ดู resource usage
 kubectl top pods -n strimzi
@@ -2565,6 +2744,7 @@ kubectl exec -it my-cluster-kafka-0 -n strimzi -- \
 ```
 
 ### 📊 Monitoring Setup
+
 ```yaml
 # prometheus-config.yaml
 apiVersion: v1
@@ -2587,15 +2767,16 @@ data:
 ## 🎯 Best Practices
 
 ### 🏗️ Production Configuration
+
 ```yaml
 # สำหรับ production
 spec:
   kafka:
-    replicas: 3+           # ขั้นต่ำ 3 สำหรับ HA
-    version: "3.5.0"       # ใช้ stable version
+    replicas: 3+ # ขั้นต่ำ 3 สำหรับ HA
+    version: "3.5.0" # ใช้ stable version
     storage:
       type: persistent-claim # ใช้ persistent storage
-      size: 500Gi          # ตาม requirement
+      size: 500Gi # ตาม requirement
     config:
       num.network.threads: 8
       num.io.threads: 16
@@ -2605,6 +2786,7 @@ spec:
 ```
 
 ### 🔒 Security Best Practices
+
 ```yaml
 # TLS authentication
 listeners:
@@ -2631,6 +2813,7 @@ metadata:
 ```
 
 ### 📈 Scaling Guidelines
+
 ```bash
 # Scaling Kafka brokers
 kubectl scale kafka my-cluster --replicas=5 -n strimzi
@@ -2648,17 +2831,20 @@ kubectl get kafkarebalance -n strimzi
 ## 📚 เอกสารประกอบเพิ่มเติม
 
 ### 🔗 Official Resources
+
 - **Strimzi Documentation:** https://strimzi.io/docs/
 - **Helm Chart:** https://github.com/strimzi/strimzi-kafka-operator/tree/main/helm-charts
 - **Configuration Examples:** https://github.com/strimzi/strimzi-kafka-operator/examples
 
 ### 🎯 Advanced Topics
+
 - **Kafka Bridge:** HTTP API for Kafka
 - **Kafka Connect:** Data integration
 - **MirrorMaker 2:** Replication across clusters
 - **Cruise Control:** Rebalancing and optimization
 
 ### 🔄 Migration และ Upgrades
+
 ```bash
 # Upgrade Strimzi
 helm upgrade strimzi-kafka-operator strimzi/strimzi-kafka-operator \
@@ -2673,12 +2859,14 @@ kubectl patch kafka my-cluster -n strimzi \
 ---
 
 **🎉 เมื่อ script ทำงานเสร็จ คุณจะได้:**
+
 - ✅ Strimzi Operator พร้อมใช้งานใน namespace "strimzi"
 - ✅ ครบถ้วนของ CRDs สำหรับจัดการ Kafka resources
 - ✅ Monitoring และ validation webhooks
 - ✅ Environment พร้อมสำหรับสร้าง Kafka clusters
 - ✅ Support สำหรับ GitOps workflows
-```
+
+````
 
 ```markdown
 # 📖 คู่มือ Script: install-argocd.sh
@@ -2707,7 +2895,7 @@ graph TB
         MF[Manifests YAML]
         APP[Application Definitions]
     end
-    
+
     subgraph "Argo CD"
         API[API Server]
         UI[Web UI]
@@ -2715,13 +2903,13 @@ graph TB
         AC[Application Controller]
         REDIS[Redis Cache]
     end
-    
+
     subgraph "Kubernetes Cluster"
         K8S[K8s API Server]
         APPS[Applications]
         KAFKA[Kafka Topics]
     end
-    
+
     GH --> RS
     RS --> AC
     AC --> K8S
@@ -2729,13 +2917,14 @@ graph TB
     K8S --> KAFKA
     API --> UI
     AC --> REDIS
-```
+````
 
 ---
 
 ## 🏗️ การทำงานของ Script
 
 ### 🔄 Execution Flow
+
 ```mermaid
 graph TD
     A[Start Script] --> B[Check Prerequisites]
@@ -2753,6 +2942,7 @@ graph TD
 ### 📋 ขั้นตอนการทำงานโดยละเอียด
 
 #### 1️⃣ Phase 1: Prerequisites Check
+
 ```bash
 check_prerequisites() {
     # ตรวจสอบ kubectl connection
@@ -2769,6 +2959,7 @@ check_prerequisites() {
 ```
 
 #### 2️⃣ Phase 2: Argo CD Installation
+
 ```bash
 install_argocd() {
     # สร้าง namespace สำหรับ Argo CD
@@ -2781,6 +2972,7 @@ install_argocd() {
 ```
 
 #### 3️⃣ Phase 3: External Access Configuration
+
 ```bash
 configure_access() {
     # แปลง service เป็น NodePort สำหรับ external access
@@ -2801,6 +2993,7 @@ configure_access() {
 ## 📦 Argo CD Components ที่ติดตั้ง
 
 ### 🏗️ Core Components
+
 ```text
 argocd/
 ├── Application Controller
@@ -2830,10 +3023,10 @@ argocd/
 ```
 
 ### 🔧 Installation Details
+
 ```yaml
 # Source manifest
 https://raw.githubusercontent.com/argoproj/argo-cd/v2.8.3/manifests/install.yaml
-
 # Version: 2.8.3 (stable)
 # Namespace: argocd
 # Installation method: Kubernetes manifest
@@ -2858,6 +3051,7 @@ chmod +x scripts/install-argocd.sh
 ```
 
 ### 📊 Output ตัวอย่าง
+
 ```text
 [INFO] Starting Argo CD installation for Kafka Topics GitOps...
 
@@ -2958,6 +3152,7 @@ Next steps:
 ## 🎯 การใช้งานหลังติดตั้ง
 
 ### 🖥️ Web Interface Access
+
 ```text
 URL: http://localhost:30080
 Username: admin
@@ -2973,6 +3168,7 @@ Features:
 ```
 
 ### 🔧 CLI Usage
+
 ```bash
 # Login
 argocd login localhost:30080
@@ -2993,6 +3189,7 @@ argocd app sync kafka-topics --watch
 ```
 
 ### 📋 การสร้าง Application
+
 ```yaml
 # argocd/application.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -3003,18 +3200,18 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-org/poc-kafka-topics.git'
+    repoURL: "https://github.com/your-org/poc-kafka-topics.git"
     targetRevision: HEAD
     path: topics
   destination:
-    server: 'https://kubernetes.default.svc'
+    server: "https://kubernetes.default.svc"
     namespace: strimzi
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
 ```
 
 ---
@@ -3022,6 +3219,7 @@ spec:
 ## 🔧 Advanced Configuration
 
 ### 🎛️ Custom Installation Options
+
 ```yaml
 # custom-argocd-cm.yaml
 apiVersion: v1
@@ -3042,7 +3240,7 @@ data:
         clientID: argocd
         clientSecret: $oidc.clientSecret
         requestedScopes: ["openid", "profile", "email", "groups"]
-  
+
   # Repository credentials
   repositories: |
     - type: git
@@ -3056,6 +3254,7 @@ data:
 ```
 
 ### 🔐 RBAC Configuration
+
 ```yaml
 # argocd-rbac-cm.yaml
 apiVersion: v1
@@ -3068,14 +3267,15 @@ data:
     p, role:developer, applications, *, default/.*, allow
     p, role:developer, applications, sync, default/.*, allow
     p, role:readonly, applications, get, default/.*, allow
-    
+
     g, kafka-admins, role:developer
     g, kafka-viewers, role:readonly
-  
+
   policy.default: role:readonly
 ```
 
 ### 📊 Notification Setup
+
 ```yaml
 # argocd-notifications-cm.yaml
 apiVersion: v1
@@ -3087,7 +3287,7 @@ data:
   service.slack: |
     token: $slack-token
     username: argocd
-  
+
   template.app-sync-status: |
     message: |
       Application {{.app.metadata.name}} is {{.app.status.operationState.phase}}.
@@ -3117,6 +3317,7 @@ data:
 ### 🔍 ปัญหาที่พบบ่อย
 
 #### 1️⃣ UI Access Issues
+
 ```bash
 # ❌ Problem: Cannot access UI
 curl http://localhost:30080
@@ -3131,6 +3332,7 @@ docker port kafka-poc-control-plane | grep 30080
 ```
 
 #### 2️⃣ Login Issues
+
 ```bash
 # ❌ Problem: Invalid password
 argocd login localhost:30080
@@ -3146,6 +3348,7 @@ kubectl -n argocd patch secret argocd-secret \
 ```
 
 #### 3️⃣ Application Sync Issues
+
 ```bash
 # ❌ Problem: Sync fails
 argocd app get kafka-topics
@@ -3161,6 +3364,7 @@ kubectl get secret -n argocd
 ```
 
 #### 4️⃣ Repository Connection Issues
+
 ```bash
 # ❌ Problem: Cannot connect to Git repo
 Error: failed to clone repository
@@ -3174,6 +3378,7 @@ kubectl run git-test --image=alpine --rm -it --restart=Never \
 ```
 
 #### 5️⃣ Performance Issues
+
 ```bash
 # ❌ Problem: Slow sync operations
 # ใช้เวลานานในการ sync
@@ -3188,6 +3393,7 @@ kubectl patch deployment argocd-application-controller -n argocd \
 ```
 
 ### 🧪 Debug Mode
+
 ```bash
 # เปิด debug logs
 kubectl patch deployment argocd-server -n argocd \
@@ -3199,6 +3405,7 @@ kubectl logs -n argocd -f deployment/argocd-application-controller
 ```
 
 ### 🔄 Reset และ Reinstall
+
 ```bash
 # ลบ Argo CD ทั้งหมด
 kubectl delete -n argocd -f \
@@ -3216,6 +3423,7 @@ kubectl delete namespace argocd
 ## 📊 Monitoring และ Maintenance
 
 ### 📈 Health Monitoring
+
 ```bash
 # ตรวจสอับ Argo CD health
 argocd admin notifications
@@ -3227,6 +3435,7 @@ watch -n 5 "argocd app list | grep kafka-topics"
 ```
 
 ### 📊 Metrics Collection
+
 ```yaml
 # prometheus-metrics.yaml
 apiVersion: v1
@@ -3239,12 +3448,13 @@ spec:
     matchLabels:
       app.kubernetes.io/name: argocd-metrics
   endpoints:
-  - port: metrics
-    interval: 30s
-    path: /metrics
+    - port: metrics
+      interval: 30s
+      path: /metrics
 ```
 
 ### 🔧 Backup และ Restore
+
 ```bash
 # Backup Argo CD configurations
 kubectl get app -n argocd -o yaml > argocd-apps-backup.yaml
@@ -3262,6 +3472,7 @@ kubectl apply -f argocd-secret-backup.yaml
 ## 🎯 Best Practices
 
 ### 🔒 Security Recommendations
+
 ```yaml
 # 1. เปลี่ยน default password
 kubectl -n argocd patch secret argocd-secret \
@@ -3292,6 +3503,7 @@ data:
 ```
 
 ### 📋 Application Organization
+
 ```yaml
 # ใช้ projects สำหรับ organization
 apiVersion: argoproj.io/v1alpha1
@@ -3302,30 +3514,31 @@ metadata:
 spec:
   description: Kafka Topics Management
   sourceRepos:
-  - https://github.com/your-org/kafka-topics.git
+    - https://github.com/your-org/kafka-topics.git
   destinations:
-  - namespace: strimzi
-    server: https://kubernetes.default.svc
+    - namespace: strimzi
+      server: https://kubernetes.default.svc
   roles:
-  - name: kafka-admin
-    policies:
-    - p, proj:kafka-topics-project:*, applications, *, kafka-topics-project/*, allow
-    groups:
-    - kafka-admins
+    - name: kafka-admin
+      policies:
+        - p, proj:kafka-topics-project:*, applications, *, kafka-topics-project/*, allow
+      groups:
+        - kafka-admins
 ```
 
 ### 🔄 Sync Strategies
+
 ```yaml
 # Automated sync with safeguards
 spec:
   syncPolicy:
     automated:
-      prune: true      # Delete resources when removed from Git
-      selfHeal: true   # Fix drift automatically
+      prune: true # Delete resources when removed from Git
+      selfHeal: true # Fix drift automatically
     syncOptions:
-    - CreateNamespace=true
-    - PrunePropagationPolicy=foreground
-    - PruneLast=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
     retry:
       limit: 5
       backoff:
@@ -3339,12 +3552,14 @@ spec:
 ## 📚 เอกสารประกอบเพิ่มเติม
 
 ### 🔗 Official Resources
+
 - **Argo CD Documentation:** https://argoproj.github.io/argo-cd/
 - **Getting Started Guide:** https://argoproj.github.io/argo-cd/getting_started/
 - **Operator Manual:** https://argoproj.github.io/argo-cd/operator-manual/
 - **GitOps Best Practices:** https://argoproj.github.io/argo-cd/docs/operator-manual/declarative-setup/
 
 ### 🎯 Advanced Features
+
 - **ApplicationSets:** Dynamic app generation
 - **Progressive Delivery:** Canary และ blue-green deployments
 - **Multi-tenancy:** Project-based isolation
@@ -3353,6 +3568,7 @@ spec:
 - **Kustomize Support:** Kustomize-based deployments
 
 ### 🔧 Integration Examples
+
 ```yaml
 # Git with Helm
 source:
@@ -3361,22 +3577,24 @@ source:
   path: kafka-topics
   helm:
     valueFiles:
-    - values-prod.yaml
+      - values-prod.yaml
     parameters:
-    - name: image.tag
-      value: "1.2.3"
+      - name: image.tag
+        value: "1.2.3"
 ```
 
 ---
 
 **🎉 เมื่อ script ทำงานเสร็จ คุณจะได้:**
+
 - ✅ Argo CD deployment พร้อมใช้งานใน namespace "argocd"
 - ✅ Web UI ที่ http://localhost:30080
 - ✅ Admin credentials พร้อมใช้งาน
 - ✅ Argo CD CLI (optional)
 - ✅ GitOps workflow สำหรับ Kafka topics management
 - ✅ Monitoring และ health checking capabilities
-```
+
+````
 
 ```markdown
 # 📖 คู่มือ Script: test-topics.sh
@@ -3418,7 +3636,7 @@ graph TD
     J --> K[Generate Report]
     K --> L[Cleanup]
     L --> M[End]
-```
+````
 
 ---
 
@@ -3427,9 +3645,11 @@ graph TD
 ### 1️⃣ Test 1: Topic Creation
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่าสามารถสร้าง KafkaTopic resource ผ่าน YAML ได้สำเร็จ
 
 #### 🔧 การทำงาน
+
 ```bash
 # สร้าง test topic
 kubectl apply -f - <<EOF
@@ -3449,6 +3669,7 @@ EOF
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 # 1. ตรวจสอบ KafkaTopic resource
 kubectl get kafkatopic test-topic-creation -n strimzi
@@ -3464,6 +3685,7 @@ kubectl exec my-cluster-kafka-0 -n strimzi -- \
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ KafkaTopic resource created successfully
 ✅ Topic status = Ready
@@ -3478,9 +3700,11 @@ kubectl exec my-cluster-kafka-0 -n strimzi -- \
 ### 2️⃣ Test 2: Configuration Update
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่าสามารถอัปเดตคอนฟิกของ topic ได้ (เพิ่ม partitions)
 
 #### 🔧 การทำงาน
+
 ```bash
 # อัปเดต partitions จาก 3 → 6
 kubectl patch kafkatopic test-topic-creation -n strimzi \
@@ -3491,6 +3715,7 @@ sleep 10
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 # ตรวจสอบ partitions ใน Kafka
 kubectl exec my-cluster-kafka-0 -n strimzi -- \
@@ -3500,6 +3725,7 @@ kubectl exec my-cluster-kafka-0 -n strimzi -- \
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ Partitions ถูกเพิ่มจาก 3 เป็น 6
 ✅ Topic ยังคงทำงานปกติ
@@ -3508,6 +3734,7 @@ kubectl exec my-cluster-kafka-0 -n strimzi -- \
 ```
 
 #### ⚠️ Important Notes
+
 ```yaml
 # สิ่งที่สามารถ update ได้:
 - partitions: สามารถเพิ่มได้ แต่ลดไม่ได้
@@ -3524,9 +3751,11 @@ kubectl exec my-cluster-kafka-0 -n strimzi -- \
 ### 3️⃣ Test 3: Message Flow (Produce/Consume)
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่าสามารถส่งและรับข้อความผ่าน topic ได้สำเร็จ
 
 #### 🔧 การทำงาน
+
 ```bash
 # 1. สร้าง unique test message
 TEST_MESSAGE="test-message-$(date +%s)"
@@ -3547,6 +3776,7 @@ CONSUMED_MESSAGE=$(kubectl exec my-cluster-kafka-0 -n strimzi -- \
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 # เปรียบเทียบ sent vs received
 if [[ "$CONSUMED_MESSAGE" == "$TEST_MESSAGE" ]]; then
@@ -3559,6 +3789,7 @@ fi
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ Message ถูกส่งไปยัง topic สำเร็จ
 ✅ Message ถูกเก็บไว้ใน Kafka อย่างถูกต้อง
@@ -3572,9 +3803,11 @@ fi
 ### 4️⃣ Test 4: Topic Deletion
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่าสามารถลบ topic อย่างปลอดภัยและสมบูรณ์ได้
 
 #### 🔧 การทำงาน
+
 ```bash
 # ลบ KafkaTopic resource
 kubectl delete kafkatopic test-topic-creation -n strimzi
@@ -3584,6 +3817,7 @@ sleep 10
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 # 1. ตรวจสอบว่า KafkaTopic หายไป
 ! kubectl get kafkatopic test-topic-creation -n strimzi &> /dev/null
@@ -3595,6 +3829,7 @@ sleep 10
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ KafkaTopic resource ถูกลบสำเร็จ
 ✅ Topic ถูกลบจาก Kafka cluster
@@ -3604,6 +3839,7 @@ sleep 10
 ```
 
 #### ⚠️ Safety Mechanisms
+
 ```yaml
 # Strimzi deletion safeguards:
 - Finalizers: ป้องกันการลบโดยไม่ตั้งใจ
@@ -3617,9 +3853,11 @@ sleep 10
 ### 5️⃣ Test 5: Idempotent Operations
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่าการรันคำสั่งเดิมซ้ำๆ ไม่ทำให้เกิด error
 
 #### 🔧 การทำงาน
+
 ```bash
 # Apply YAML ครั้งที่ 1
 kubectl apply -f - <<EOF
@@ -3655,6 +3893,7 @@ EOF &> /dev/null
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 # ตรวจสอบว่าไม่มี error
 if [ $? -eq 0 ]; then
@@ -3665,6 +3904,7 @@ fi
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ การ apply ซ้ำไม่ทำให้เกิด error
 ✅ State คงเดิม (idempotent)
@@ -3674,6 +3914,7 @@ fi
 ```
 
 #### 🧠 Idempotency Principles
+
 ```yaml
 # Idempotent operations in Kubernetes:
 - apply: สร้างถ้ายังไม่มี, update ถ้ามีอยู่แล้ว
@@ -3687,9 +3928,11 @@ fi
 ### 6️⃣ Test 6: Argo CD Synchronization
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่า Argo CD application สามารถ sync กับ Git repository ได้
 
 #### 🔧 การทำงาน
+
 ```bash
 # 1. ตรวจสอบว่า Argo CD ถูกติดตั้ง
 kubectl get namespace argocd &> /dev/null || {
@@ -3702,7 +3945,7 @@ if kubectl get application kafka-topics -n argocd &> /dev/null; then
     # 3. ดู health status
     APP_STATUS=$(kubectl get application kafka-topics -n argocd \
       -o jsonpath='{.status.health.status}')
-    
+
     # 4. ดู sync status
     SYNC_STATUS=$(kubectl get application kafka-topics -n argocd \
       -o jsonpath='{.status.sync.status}')
@@ -3710,6 +3953,7 @@ fi
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 # ตรวจสอบสถานะ
 if [[ "$APP_STATUS" == "Healthy" && "$SYNC_STATUS" == "Synced" ]]; then
@@ -3722,6 +3966,7 @@ fi
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ Argo CD application status = Healthy
 ✅ Argo CD sync status = Synced
@@ -3731,6 +3976,7 @@ fi
 ```
 
 #### 🔍 Sync Status Details
+
 ```yaml
 # Health States:
 - Healthy: All resources healthy
@@ -3750,9 +3996,11 @@ fi
 ### 7️⃣ Test 7: Batch Topic Creation
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่าสามารถสร้างหลาย topics จาก directory ได้สำเร็จ
 
 #### 🔧 การทำงาน
+
 ```bash
 TOPICS_DIR="topics"
 TOPIC_COUNT=0
@@ -3775,6 +4023,7 @@ done
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 if [[ $SUCCESS_COUNT -eq $TOPIC_COUNT && $TOPIC_COUNT -gt 0 ]]; then
     echo "✅ Batch creation successful ($SUCCESS_COUNT/$TOPIC_COUNT topics)"
@@ -3786,6 +4035,7 @@ fi
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ ทุก YAML files ถูก apply สำเร็จ
 ✅ ทุก topics ถูกสร้างใน Kubernetes
@@ -3795,6 +4045,7 @@ fi
 ```
 
 #### 📁 Directory Structure Example
+
 ```text
 topics/
 ├── orders-events.yaml
@@ -3820,9 +4071,11 @@ spec:
 ### 8️⃣ Test 8: Configuration Validation
 
 #### 🎯 วัตถุประสงค์
+
 ตรวจสอบว่าระบบสามารถ reject invalid configurations ได้
 
 #### 🔧 การทำงาน
+
 ```bash
 # สร้าง invalid config และต้องถูก reject
 kubectl apply -f - <<EOF &> /dev/null
@@ -3842,6 +4095,7 @@ EOF
 ```
 
 #### ✅ การตรวจสอบ
+
 ```bash
 if [ $? -ne 0 ]; then
     echo "✅ Configuration validation working (invalid config rejected)"
@@ -3851,6 +4105,7 @@ fi
 ```
 
 #### 📊 Expected Results
+
 ```text
 ✅ Invalid config ถูก reject
 ✅ Error message ชัดเจน
@@ -3860,6 +4115,7 @@ fi
 ```
 
 #### 🛡️ Validation Examples
+
 ```yaml
 # Invalid configurations ที่ควรถูก reject:
 ❌ replicas > available brokers
@@ -3886,13 +4142,14 @@ fi
 ## 📊 Test Report Generation
 
 ### 📋 Report Structure
+
 ```bash
 generate_report() {
     echo "=============================================="
     echo "           TEST EXECUTION REPORT            "
     echo "=============================================="
     echo
-    
+
     # Summary
     echo "Summary:"
     echo "  Total Tests: $TOTAL_TESTS"
@@ -3900,19 +4157,19 @@ generate_report() {
     echo "  Failed: $TESTS_FAILED"
     echo "  Success Rate: $(( (TESTS_PASSED * 100) / TOTAL_TESTS ))%"
     echo
-    
+
     # Detailed results
     echo "Detailed Results:"
     for result in "${TEST_RESULTS[@]}"; do
         echo "  $result"
     done
     echo
-    
+
     # Cluster status
     echo "Cluster Status:"
     kubectl get kafka my-cluster -n strimzi -o jsonpath='Name: {.metadata.name}, Status: {.status.conditions[?(@.type=="Ready")].status}'
     echo
-    
+
     # Topic count
     TOPIC_COUNT=$(kubectl get kafkatopic -n strimzi --no-headers | wc -l)
     echo "Current Topics: $TOPIC_COUNT"
@@ -3921,9 +4178,10 @@ generate_report() {
 ```
 
 ### 📈 Example Report Output
+
 ```text
 ==============================================
-           TEST EXECUTION REPORT            
+           TEST EXECUTION REPORT
 ==============================================
 
 Summary:
@@ -3955,6 +4213,7 @@ Current Topics: 5
 ## 🧪 Running Tests
 
 ### 🚀 Basic Usage
+
 ```bash
 # รันทุก tests
 ./scripts/test-topics.sh
@@ -3967,6 +4226,7 @@ Current Topics: 5
 ```
 
 ### 🎛️ Test Configuration
+
 ```bash
 # Environment variables สำหรับ customization
 export NAMESPACE="strimzi"           # Kubernetes namespace
@@ -3977,6 +4237,7 @@ export TIMEOUT=300                    # Test timeout (seconds)
 ```
 
 ### 📋 Prerequisites Check
+
 ```bash
 # ตรวจสอบก่อนรัน tests
 check_prerequisites() {
@@ -3985,13 +4246,13 @@ check_prerequisites() {
         echo "❌ Cannot connect to Kubernetes cluster"
         exit 1
     }
-    
+
     # 2. Kafka cluster exists
     kubectl get kafka $CLUSTER_NAME -n $NAMESPACE &> /dev/null || {
         echo "❌ Kafka cluster '$CLUSTER_NAME' not found"
         exit 1
     }
-    
+
     # 3. Kafka is ready
     KAFKA_STATUS=$(kubectl get kafka $CLUSTER_NAME -n $NAMESPACE \
       -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}')
@@ -4009,6 +4270,7 @@ check_prerequisites() {
 ### 🔍 การแก้ปัญหา Test Failures
 
 #### 1️⃣ Topic Creation Failures
+
 ```bash
 # ❌ Problem: Topic not created
 # ✅ Solution: ตรวจสอับ logs
@@ -4022,6 +4284,7 @@ kubectl get pods -n strimzi -l strimzi.io/kind=kafka
 ```
 
 #### 2️⃣ Message Flow Issues
+
 ```bash
 # ❌ Problem: Cannot produce/consume
 # ✅ Solution: ตรวจสอับ Kafka brokers
@@ -4038,6 +4301,7 @@ kafka-topics.sh --list --bootstrap-server localhost:9092
 ```
 
 #### 3️⃣ Argo CD Sync Issues
+
 ```bash
 # ❌ Problem: Argo CD not syncing
 # ✅ Solution: ตรวจสอับ application
@@ -4054,6 +4318,7 @@ argocd app logs kafka-topics
 ```
 
 #### 4️⃣ Permission Issues
+
 ```bash
 # ❌ Problem: Permission denied
 # ✅ Solution: ตรวจสอับ RBAC
@@ -4065,6 +4330,7 @@ kubectl auth can-i get kafkatopic -n strimzi
 ```
 
 ### 🧪 Debug Mode
+
 ```bash
 # เปิด debug logging
 export DEBUG=true
@@ -4076,6 +4342,7 @@ set -e  # Exit on error
 ```
 
 ### 🔄 Test Isolation
+
 ```bash
 # ใช้ unique names สำหรับ parallel testing
 export TEST_ID=$(date +%s)
@@ -4093,27 +4360,28 @@ kubectl create namespace test-${TEST_ID}
 ## 📈 Performance Testing
 
 ### ⚡ Load Testing Extension
+
 ```bash
 # Test high-volume message flow
 load_test_message_flow() {
     echo "[TEST] Running load test..."
-    
+
     # สร้าง large payload
     LARGE_MESSAGE=$(head -c 10000 < /dev/urandom | base64)
-    
+
     # ส่ง 1000 messages
     for i in {1..1000}; do
         echo "${LARGE_MESSAGE}-${i}" | kubectl exec -i my-cluster-kafka-0 -n strimzi -- \
             kafka-console-producer.sh --broker-list localhost:9092 --topic test-topic-creation &
     done
-    
+
     wait
-    
+
     # ตรวจสอับว่า messages ถูกเก็บไว้ทั้งหมด
     MESSAGE_COUNT=$(kubectl exec my-cluster-kafka-0 -n strimzi -- \
         kafka-run-class.sh kafka.tools.GetOffsetShell \
         --broker-list localhost:9092 --topic test-topic-creation)
-    
+
     if [[ "$MESSAGE_COUNT" -ge 1000 ]]; then
         print_success "Load test passed ($MESSAGE_COUNT messages)"
     else
@@ -4123,19 +4391,20 @@ load_test_message_flow() {
 ```
 
 ### 📊 Throughput Testing
+
 ```bash
 # Measure throughput
 throughput_test() {
     START_TIME=$(date +%s)
-    
+
     # Produce messages
     seq 1 10000 | kubectl exec -i my-cluster-kafka-0 -n strimzi -- \
         kafka-console-producer.sh --broker-list localhost:9092 --topic test-topic-creation
-    
+
     END_TIME=$(date +%s)
     DURATION=$((END_TIME - START_TIME))
     THROUGHPUT=$((10000 / DURATION))
-    
+
     echo "Throughput: $THROUGHPUT messages/second"
 }
 ```
@@ -4145,6 +4414,7 @@ throughput_test() {
 ## 🎯 Best Practices
 
 ### 🧪 Test Design Principles
+
 ```yaml
 1. Isolation: Tests ไม่ควร affect กัน
 2. Idempotency: สามารถรันซ้ำได้
@@ -4155,6 +4425,7 @@ throughput_test() {
 ```
 
 ### 📋 Continuous Integration
+
 ```yaml
 # .github/workflows/test.yml
 name: Kafka Topics Test
@@ -4163,23 +4434,24 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup kind cluster
-      run: ./scripts/setup-kind.sh
-    - name: Install Strimzi
-      run: ./scripts/install-strimzi.sh
-    - name: Install Argo CD
-      run: ./scripts/install-argocd.sh
-    - name: Run Tests
-      run: ./scripts/test-topics.sh
-    - name: Upload Results
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-results
-        path: test-results.log
+      - uses: actions/checkout@v2
+      - name: Setup kind cluster
+        run: ./scripts/setup-kind.sh
+      - name: Install Strimzi
+        run: ./scripts/install-strimzi.sh
+      - name: Install Argo CD
+        run: ./scripts/install-argocd.sh
+      - name: Run Tests
+        run: ./scripts/test-topics.sh
+      - name: Upload Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test-results.log
 ```
 
 ### 🔄 Test Automation
+
 ```bash
 # Automated test runner
 run_full_test_suite() {
@@ -4187,17 +4459,17 @@ run_full_test_suite() {
     ./scripts/setup-kind.sh
     ./scripts/install-strimzi.sh
     ./scripts/install-argocd.sh
-    
+
     # 2. Deploy Kafka cluster
     kubectl apply -f kafka/kafka-cluster.yaml
     kubectl wait kafka/my-cluster --for=condition=Ready --timeout=600s -n strimzi
-    
+
     # 3. Run tests
     ./scripts/test-topics.sh
-    
+
     # 4. Generate report
     ./scripts/generate-test-report.sh
-    
+
     # 5. Cleanup (optional)
     kind delete cluster --name kafka-poc
 }
@@ -4208,12 +4480,14 @@ run_full_test_suite() {
 ## 📚 เอกสารประกอบเพิ่มเติม
 
 ### 🔗 Test Resources
+
 - **Kafka Testing Tools:** https://kafka.apache.org/documentation/#tools
 - **Strimzi Testing:** https://strimzi.io/docs/latest/#testing-strimzi
 - **Argo CD Testing:** https://argoproj.github.io/argo-cd/developer-guide/#testing
 - **Kubernetes Testing:** https://kubernetes.io/docs/tasks/debug-application-cluster/debug-pods/
 
 ### 🎯 Advanced Testing
+
 - **Chaos Engineering:** Simulate failures
 - **Stress Testing:** High volume scenarios
 - **Security Testing:** Authentication & authorization
@@ -4221,18 +4495,20 @@ run_full_test_suite() {
 - **Compliance Testing:** Regulatory requirements
 
 ### 📊 Test Metrics
+
 ```yaml
 Key Performance Indicators:
-- Availability: % uptime
-- Throughput: messages/second
-- Latency: end-to-end time
-- Error Rate: % failed operations
-- Recovery Time: MTTR (Mean Time To Recovery)
+  - Availability: % uptime
+  - Throughput: messages/second
+  - Latency: end-to-end time
+  - Error Rate: % failed operations
+  - Recovery Time: MTTR (Mean Time To Recovery)
 ```
 
 ---
 
 **🎉 Test script นี้ช่วยให้คุณมั่นใจว่า:**
+
 - ✅ Kafka Topics Declarative Management ทำงานถูกต้อง
 - ✅ Strimzi Operator ทำงานตามปกติ
 - ✅ Argo CD GitOps workflow เชื่อถือได้
@@ -4240,7 +4516,8 @@ Key Performance Indicators:
 - ✅ Changes ถูก sync อย่างถูกต้อง
 - ✅ Configuration validation ทำงาน
 - ✅ Idempotent operations ได้ผล
-```
+
+````
 
 ```markdown
 # 📖 คู่มือ Script: validate-yaml.sh
@@ -4255,7 +4532,7 @@ Key Performance Indicators:
 
 Script นี้ตรวจสอบ YAML files ที่อยู่ใน:
 - `kafka/` - Kafka cluster configurations
-- `topics/` - KafkaTopic definitions  
+- `topics/` - KafkaTopic definitions
 - `argocd/` - Argo CD application configurations
 - `scripts/kind-config.yaml` - Kind cluster configuration
 
@@ -4265,18 +4542,20 @@ Script นี้ตรวจสอบ YAML files ที่อยู่ใน:
 ```bash
 # ใช้ yq สำหรับ YAML syntax checking
 yq eval '.' "$file" > /dev/null 2>&1
-```
+````
 
 #### 2. Structure Validation
+
 ```bash
 # ตรวจสอบ required fields
 api_version=$(yq eval '.apiVersion' "$file")
-kind=$(yq eval '.kind' "$file") 
+kind=$(yq eval '.kind' "$file")
 name=$(yq eval '.metadata.name' "$file")
 namespace=$(yq eval '.metadata.namespace' "$file")
 ```
 
 #### 3. Type-Specific Validation
+
 ```yaml
 # ตรวจสอบตาม resource type:
 - Kafka: version, replicas, storage, listeners
@@ -4290,6 +4569,7 @@ namespace=$(yq eval '.metadata.namespace' "$file")
 ## 🏗️ การทำงานของ Script
 
 ### 🔄 Validation Flow
+
 ```mermaid
 graph TD
     A[Start Validation] --> B[Check yq Tool]
@@ -4317,6 +4597,7 @@ graph TD
 ### 📋 การทำงานโดยละเอียด
 
 #### 1️⃣ Tool Check
+
 ```bash
 check_yq() {
     if ! command -v yq &> /dev/null; then
@@ -4329,11 +4610,12 @@ check_yq() {
 ```
 
 #### 2️⃣ File Discovery
+
 ```bash
 # Find all YAML files in project
 local yaml_files=(
     "$PROJECT_DIR/kafka/*.yaml"
-    "$PROJECT_DIR/topics/*.yaml" 
+    "$PROJECT_DIR/topics/*.yaml"
     "$PROJECT_DIR/argocd/*.yaml"
     "$PROJECT_DIR/scripts/kind-config.yaml"
 )
@@ -4354,24 +4636,26 @@ done
 ### 🔧 1. Kafka Cluster Validation
 
 #### 📋 Required Fields
+
 ```yaml
 # ตรวจสอบ fields ที่จำเป็น:
 spec:
   kafka:
-    version: "3.5.0"        # ✅ ต้องระบุ version
-    replicas: 3             # ✅ ต้อง >= 1
-    listeners: [...]        # ✅ ต้องมี listeners
-    storage: {...}          # ✅ ต้องมี storage config
+    version: "3.5.0" # ✅ ต้องระบุ version
+    replicas: 3 # ✅ ต้อง >= 1
+    listeners: [...] # ✅ ต้องมี listeners
+    storage: { ... } # ✅ ต้องมี storage config
   zookeeper:
-    replicas: 3             # ✅ ต้อง >= 1
-    storage: {...}          # ✅ ต้องมี storage
+    replicas: 3 # ✅ ต้อง >= 1
+    storage: { ... } # ✅ ต้องมี storage
 ```
 
 #### 🎛️ Validation Rules
+
 ```bash
 validate_kafka() {
     local file="$1"
-    
+
     # Version check
     local kafka_version=$(yq eval '.spec.kafka.version' "$file" 2>/dev/null)
     if [[ -z "$kafka_version" ]]; then
@@ -4382,7 +4666,7 @@ validate_kafka() {
             print_warning "Kafka version format may be invalid: $kafka_version"
         fi
     fi
-    
+
     # Replicas check
     local replicas=$(yq eval '.spec.kafka.replicas' "$file" 2>/dev/null)
     if [[ -z "$replicas" ]]; then
@@ -4392,7 +4676,7 @@ validate_kafka() {
     elif [[ "$replicas" -lt 3 ]]; then
         print_warning "Kafka replicas < 3 (recommended minimum for production)"
     fi
-    
+
     # Storage validation
     local storage_type=$(yq eval '.spec.kafka.storage.type' "$file" 2>/dev/null)
     if [[ -z "$storage_type" ]]; then
@@ -4407,6 +4691,7 @@ validate_kafka() {
 ```
 
 #### 📊 Kafka Validation Example
+
 ```text
 [VALIDATE] Validating: kafka/kafka-cluster.yaml
 ✅ YAML syntax is valid
@@ -4430,24 +4715,26 @@ validate_kafka() {
 ### 📋 2. KafkaTopic Validation
 
 #### 🎯 Required Fields
+
 ```yaml
 # ตรวจสอบ fields ที่จำเป็น:
 metadata:
-  name: orders-events           # ✅ ต้องมีชื่อ
-  namespace: strimzi            # ✅ ต้องมี namespace
+  name: orders-events # ✅ ต้องมีชื่อ
+  namespace: strimzi # ✅ ต้องมี namespace
   labels:
-    strimzi.io/cluster: "my-cluster"  # ✅ จำเป็นมาก!
+    strimzi.io/cluster: "my-cluster" # ✅ จำเป็นมาก!
 spec:
-  partitions: 3                # ✅ ต้อง >= 1
-  replicas: 3                  # ✅ ต้อง >= 1 และ <= brokers
-  config: {...}                # ✅ ต้องมี basic config
+  partitions: 3 # ✅ ต้อง >= 1
+  replicas: 3 # ✅ ต้อง >= 1 และ <= brokers
+  config: { ... } # ✅ ต้องมี basic config
 ```
 
 #### 🔍 Validation Rules
+
 ```bash
 validate_kafka_topic() {
     local file="$1"
-    
+
     # Partitions validation
     local partitions=$(yq eval '.spec.partitions' "$file" 2>/dev/null)
     if [[ -z "$partitions" ]]; then
@@ -4457,7 +4744,7 @@ validate_kafka_topic() {
     elif [[ "$partitions" -gt 100 ]]; then
         print_warning "High partition count: $partitions (may impact performance)"
     fi
-    
+
     # Replicas validation
     local replicas=$(yq eval '.spec.replicas' "$file" 2>/dev/null)
     if [[ -z "$replicas" ]]; then
@@ -4467,13 +4754,13 @@ validate_kafka_topic() {
     elif [[ "$replicas" -gt 3 ]]; then
         print_warning "Replicas > 3 (exceeds typical cluster size)"
     fi
-    
+
     # Cluster label validation (CRITICAL)
     local cluster_label=$(yq eval '.metadata.labels."strimzi.io/cluster"' "$file" 2>/dev/null)
     if [[ -z "$cluster_label" ]]; then
         print_error "Strimzi cluster label is required"
     fi
-    
+
     # Configuration validation
     local retention_ms=$(yq eval '.spec.config."retention.ms"' "$file" 2>/dev/null)
     if [[ -n "$retention_ms" ]]; then
@@ -4485,6 +4772,7 @@ validate_kafka_topic() {
 ```
 
 #### 📊 KafkaTopic Validation Example
+
 ```text
 [VALIDATE] Validating: topics/orders-events.yaml
 ✅ YAML syntax is valid
@@ -4508,24 +4796,26 @@ validate_kafka_topic() {
 ### 🚀 3. Argo CD Application Validation
 
 #### 🎯 Required Fields
+
 ```yaml
 # ตรวจสอบ fields ที่จำเป็น:
 spec:
   source:
-    repoURL: "https://github.com/user/repo.git"  # ✅ ต้องเป็น HTTPS
-    targetRevision: HEAD                        # ✅ หรือ branch/tag
-    path: "topics"                            # ✅ directory path
+    repoURL: "https://github.com/user/repo.git" # ✅ ต้องเป็น HTTPS
+    targetRevision: HEAD # ✅ หรือ branch/tag
+    path: "topics" # ✅ directory path
   destination:
-    server: "https://kubernetes.default.svc"   # ✅ cluster API
-    namespace: "strimzi"                      # ✅ target namespace
-  project: "default"                          # ✅ Argo CD project
+    server: "https://kubernetes.default.svc" # ✅ cluster API
+    namespace: "strimzi" # ✅ target namespace
+  project: "default" # ✅ Argo CD project
 ```
 
 #### 🔍 Validation Rules
+
 ```bash
 validate_argocd_app() {
     local file="$1"
-    
+
     # Repository URL validation
     local repo_url=$(yq eval '.spec.source.repoURL' "$file" 2>/dev/null)
     if [[ -z "$repo_url" ]]; then
@@ -4535,7 +4825,7 @@ validate_argocd_app() {
     elif [[ ! "$repo_url" =~ github\.com|gitlab\.com|bitbucket\.org ]]; then
         print_warning "Unknown Git provider: $repo_url"
     fi
-    
+
     # Path validation
     local path=$(yq eval '.spec.source.path' "$file" 2>/dev/null)
     if [[ -z "$path" ]]; then
@@ -4543,7 +4833,7 @@ validate_argocd_app() {
     elif [[ "$path" =~ \.\. ]]; then
         print_error "Path contains parent directory reference (security risk)"
     fi
-    
+
     # Destination validation
     local destination_server=$(yq eval '.spec.destination.server' "$file" 2>/dev/null)
     if [[ -z "$destination_server" ]]; then
@@ -4551,17 +4841,17 @@ validate_argocd_app() {
     elif [[ "$destination_server" != "https://kubernetes.default.svc" ]]; then
         print_warning "External destination server: $destination_server"
     fi
-    
+
     # Sync policy validation
     local automated=$(yq eval '.spec.syncPolicy.automated' "$file" 2>/dev/null)
     if [[ -n "$automated" ]]; then
         local prune=$(yq eval '.spec.syncPolicy.automated.prune' "$file" 2>/dev/null)
         local self_heal=$(yq eval '.spec.syncPolicy.automated.selfHeal' "$file" 2>/dev/null)
-        
+
         if [[ "$prune" == "true" ]]; then
             print_status "Prune enabled - resources will be deleted when removed from Git"
         fi
-        
+
         if [[ "$self_heal" == "true" ]]; then
             print_status "Self-heal enabled - manual changes will be reverted"
         fi
@@ -4570,6 +4860,7 @@ validate_argocd_app() {
 ```
 
 #### 📊 Argo CD Validation Example
+
 ```text
 [VALIDATE] Validating: argocd/application.yaml
 ✅ YAML syntax is valid
@@ -4594,44 +4885,46 @@ validate_argocd_app() {
 ### ⚙️ 4. Kind Configuration Validation
 
 #### 🎯 Required Fields
+
 ```yaml
 # ตรวจสอบ fields ที่จำเป็น:
-kind: Cluster                           # ✅ ต้องเป็น Cluster
-apiVersion: kind.x-k8s.io/v1alpha4     # ✅ API version
+kind: Cluster # ✅ ต้องเป็น Cluster
+apiVersion: kind.x-k8s.io/v1alpha4 # ✅ API version
 nodes:
-  - role: control-plane               # ✅ ต้องมี control-plane
-    extraPortMappings: [...]          # ✅ สำหรับ external access
+  - role: control-plane # ✅ ต้องมี control-plane
+    extraPortMappings: [...] # ✅ สำหรับ external access
 ```
 
 #### 🔍 Validation Rules
+
 ```bash
 validate_kind_config() {
     local file="$1"
-    
+
     # Kind validation
     local kind=$(yq eval '.kind' "$file" 2>/dev/null)
     if [[ "$kind" != "Cluster" ]]; then
         print_error "Kind must be 'Cluster', got: $kind"
     fi
-    
+
     # API version validation
     local api_version=$(yq eval '.apiVersion' "$file" 2>/dev/null)
     if [[ "$api_version" != "kind.x-k8s.io/v1alpha4" ]]; then
         print_warning "API version may be outdated: $api_version"
     fi
-    
+
     # Nodes validation
     local nodes=$(yq eval '.nodes | length' "$file" 2>/dev/null)
     if [[ "$nodes" -eq 0 ]]; then
         print_error "No nodes defined"
     fi
-    
+
     # Port mappings validation
     local port_mappings=$(yq eval '.nodes[0].extraPortMappings | length' "$file" 2>/dev/null)
     if [[ "$port_mappings" -eq 0 ]]; then
         print_warning "No port mappings defined (no external access)"
     fi
-    
+
     # Check for essential ports
     local has_argocd=$(yq eval '.nodes[0].extraPortMappings[] | select(.hostPort == 30080) | .hostPort' "$file" 2>/dev/null)
     if [[ -z "$has_argocd" ]]; then
@@ -4645,6 +4938,7 @@ validate_kind_config() {
 ## 🚀 การใช้งาน
 
 ### 📋 Basic Usage
+
 ```bash
 # ตรวจสอบทุก YAML files ใน project
 ./scripts/validate-yaml.sh
@@ -4657,6 +4951,7 @@ validate_kind_config() {
 ```
 
 ### 📊 Output ตัวอย่าง
+
 ```text
 [VALIDATE] Starting comprehensive YAML validation...
 
@@ -4741,6 +5036,7 @@ Validation Summary:
 ```
 
 ### 📋 Error Output Example
+
 ```text
 ─────────────────────────────────────────────────────────────
 
@@ -4779,12 +5075,13 @@ Validation Summary:
 ## 🔧 Advanced Validation Features
 
 ### 🎛️ Custom Validation Rules
+
 ```bash
 # เพิ่ม custom validation rules
 validate_custom_rules() {
     local file="$1"
     local kind=$(yq eval '.kind' "$file" 2>/dev/null)
-    
+
     case "$kind" in
         "Kafka")
             # ตรวจสอบว่ามี resource limits สำหรับ production
@@ -4807,11 +5104,12 @@ validate_custom_rules() {
 ```
 
 ### 🌍 Environment-Specific Validation
+
 ```bash
 # ตรวจสอบตาม environment
 validate_environment_specific() {
     local file="$1"
-    
+
     case "$ENVIRONMENT" in
         "development")
             # Dev environment - relaxed rules
@@ -4834,15 +5132,16 @@ validate_environment_specific() {
 ```
 
 ### 🔒 Security Validation
+
 ```bash
 validate_security() {
     local file="$1"
-    
+
     # ตรวจสอบ hardcoded secrets
     if grep -i "password\|secret\|key" "$file" | grep -q "^[^#]*:"; then
         print_warning "Potential hardcoded secrets detected"
     fi
-    
+
     # ตรวจสอบ insecure configurations
     local kind=$(yq eval '.kind' "$file" 2>/dev/null)
     if [[ "$kind" == "Kafka" ]]; then
@@ -4861,6 +5160,7 @@ validate_security() {
 ### 🔍 ปัญหาที่พบบ่อย
 
 #### 1️⃣ yq Tool Not Found
+
 ```bash
 # ❌ Problem: yq command not found
 ./scripts/validate-yaml.sh
@@ -4877,6 +5177,7 @@ sudo mv yq_linux_amd64 /usr/local/bin/yq
 ```
 
 #### 2️⃣ YAML Syntax Errors
+
 ```bash
 # ❌ Problem: Invalid YAML syntax
 # Error: yaml: line 5: mapping values are not allowed in this context
@@ -4893,6 +5194,7 @@ spec:
 ```
 
 #### 3️⃣ Missing Required Fields
+
 ```bash
 # ❌ Problem: Required fields missing
 # Error: Strimzi cluster label is required
@@ -4904,6 +5206,7 @@ metadata:
 ```
 
 #### 4️⃣ Permission Issues
+
 ```bash
 # ❌ Problem: Cannot read files
 # Error: Permission denied
@@ -4913,6 +5216,7 @@ chmod +r kafka/*.yaml topics/*.yaml argocd/*.yaml
 ```
 
 ### 🧪 Debug Mode
+
 ```bash
 # Enable debug output
 export DEBUG=true
@@ -4924,6 +5228,7 @@ yq eval '.' "$file" --verbose
 ```
 
 ### 📋 Validation Report
+
 ```bash
 # สร้าง detailed report
 ./scripts/validate-yaml.sh > validation-report.txt 2>&1
@@ -4938,6 +5243,7 @@ cat validation-report.txt
 ## 🎯 Best Practices
 
 ### 📋 YAML Structure Best Practices
+
 ```yaml
 # ✅ Good YAML structure
 apiVersion: kafka.strimzi.io/v1beta2
@@ -4961,6 +5267,7 @@ spec:
 ```
 
 ### 🔧 Naming Conventions
+
 ```bash
 # Resource naming patterns:
 - Kafka cluster: my-cluster, prod-cluster, dev-cluster
@@ -4971,6 +5278,7 @@ spec:
 ```
 
 ### 📊 Configuration Validation Checklist
+
 ```yaml
 # Pre-deployment checklist:
 □ All YAML files syntactically correct
@@ -4988,6 +5296,7 @@ spec:
 ## 📈 Continuous Integration
 
 ### 🔄 CI/CD Integration
+
 ```yaml
 # .github/workflows/validate-yaml.yml
 name: Validate YAML
@@ -4996,30 +5305,31 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install yq
-      run: |
-        sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-        sudo chmod +x /usr/local/bin/yq
-    - name: Validate YAML
-      run: ./scripts/validate-yaml.sh
-    - name: Upload Results
-      uses: actions/upload-artifact@v2
-      with:
-        name: validation-results
-        path: validation-report.txt
+      - uses: actions/checkout@v2
+      - name: Install yq
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+      - name: Validate YAML
+        run: ./scripts/validate-yaml.sh
+      - name: Upload Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: validation-results
+          path: validation-report.txt
 ```
 
 ### 📊 Validation Metrics
+
 ```bash
 # Track validation metrics over time
 track_validation_metrics() {
     local total_files=$1
     local valid_files=$2
     local invalid_files=$3
-    
+
     echo "validation_metrics,total_files=$total_files,valid_files=$valid_files,invalid_files=$invalid_files $(date +%s)" >> validation_metrics.log
-    
+
     # Send to monitoring system
     if command -v prometheus-client &> /dev/null; then
         prometheus-client increment yaml_validation_total
@@ -5034,18 +5344,21 @@ track_validation_metrics() {
 ## 📚 เอกสารประกอบเพิ่มเติม
 
 ### 🔗 Useful Resources
+
 - **YAML Specification:** https://yaml.org/spec/1.2/spec.html
 - **yq Documentation:** https://github.com/mikefarah/yq
 - **Kubernetes YAML Best Practices:** https://kubernetes.io/docs/concepts/configuration/overview/
 - **Strimzi Configuration:** https://strimzi.io/docs/operators/latest/full/configuring.html
 
 ### 🎯 Advanced Topics
+
 - **YAML Anchors and Aliases:** Reuse configuration blocks
 - **Kustomize Integration:** Template-based configurations
 - **Helm Template Validation:** Chart template checking
 - **Policy-as-Code:** OPA/Gatekeeper validation
 
 ### 📚 Related Scripts
+
 ```bash
 # Scripts ที่เกี่ยวข้อง:
 ├── setup-macos.sh      # ติดตั้งทั้งหมด
@@ -5059,6 +5372,7 @@ track_validation_metrics() {
 ---
 
 **🎉 Validation script ช่วยให้คุณ:**
+
 - ✅ มั่นใจว่า YAML syntax ถูกต้อง
 - ✅ ตรวจสอบ required fields ครบถ้วน
 - ✅ Validate configurations ตาม best practices
@@ -5066,7 +5380,8 @@ track_validation_metrics() {
 - ✅ Maintain consistency ใน project
 - ✅ Prevent deployment failures
 - ✅ Enable CI/CD integration
-```
+
+````
 
 ```markdown
 # 📖 คู่มือ Configuration: kind-config.yaml
@@ -5093,7 +5408,7 @@ nodes:
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"  # Label สำหรับ ingress
-  
+
   extraPortMappings:             # Port forwarding จาก host → container
   # HTTP/HTTPS สำหรับ ingress traffic
   - containerPort: 80            # Port ภายใน container
@@ -5102,7 +5417,7 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
-  
+
   # Kafka internal communication
   - containerPort: 9092         # Kafka bootstrap server
     hostPort: 9092
@@ -5110,7 +5425,7 @@ nodes:
   - containerPort: 9093         # Kafka broker communication
     hostPort: 9093
     protocol: TCP
-  
+
   # Kafka external access
   - containerPort: 30092        # External Kafka bootstrap
     hostPort: 30092
@@ -5118,70 +5433,79 @@ nodes:
   - containerPort: 30093        # External Kafka brokers
     hostPort: 30093
     protocol: TCP
-  
+
   # Argo CD web interface
   - containerPort: 30080        # Argo CD UI
     hostPort: 30080
     protocol: TCP
-```
+````
 
 ---
 
 ## 🔧 Configuration Components
 
 ### 1️⃣ Cluster Metadata
+
 ```yaml
-kind: Cluster                    # Resource type ของ kind
-apiVersion: kind.x-k8s.io/v1alpha4  # API version
+kind: Cluster # Resource type ของ kind
+apiVersion: kind.x-k8s.io/v1alpha4 # API version
 ```
 
 **คำอธิบาย:**
+
 - `kind: Cluster` - บอกว่านี่คือ cluster definition
 - `apiVersion` - version ของ kind API (v1alpha4 คือ current stable)
 
 ### 2️⃣ Node Configuration
+
 ```yaml
 nodes:
-- role: control-plane            # Single node architecture
+  - role: control-plane # Single node architecture
 ```
 
 **Single Node Architecture:**
+
 - ✅ **Pros:** ใช้ resources น้อย, setup ง่าย, เริ่มเร็ว
 - ❌ **Cons:** ไม่มี high availability, ไม่เหมาะ production
 
 **Alternative Multi-Node:**
+
 ```yaml
 nodes:
-- role: control-plane            # Control plane node
-  extraPortMappings: [...]
-- role: worker                  # Worker node 1
-- role: worker                  # Worker node 2
+  - role: control-plane # Control plane node
+    extraPortMappings: [...]
+  - role: worker # Worker node 1
+  - role: worker # Worker node 2
 ```
 
 ### 3️⃣ Kubelet Configuration
+
 ```yaml
 kubeadmConfigPatches:
-- |
-  kind: InitConfiguration
-  nodeRegistration:
-    kubeletExtraArgs:
-      node-labels: "ingress-ready=true"
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
 ```
 
 **คำอธิบาย:**
+
 - `kubeadmConfigPatches` - Override kubeadm default configuration
 - `node-labels: "ingress-ready=true"` - Mark node ว่าพร้อมสำหรับ ingress
 - **Purpose:** ingress-nginx controller จะ schedule pods ไปยัง node นี้
 
 ### 4️⃣ Port Mapping Strategy
+
 ```yaml
 extraPortMappings:
-- containerPort: <container-port>
-  hostPort: <host-port>
-  protocol: TCP
+  - containerPort: <container-port>
+    hostPort: <host-port>
+    protocol: TCP
 ```
 
 **Port Mapping Explained:**
+
 ```text
 Host Machine (localhost)        Container (kind node)
 ───────────────────────        ─────────────────────
@@ -5196,27 +5520,31 @@ Host Machine (localhost)        Container (kind node)
 ## 📋 Port Mapping Details
 
 ### 🌐 Ingress Ports
-| Host Port | Container Port | Service | Purpose |
-|-----------|---------------|---------|---------|
-| 80 | 80 | HTTP | Ingress HTTP traffic |
-| 443 | 443 | HTTPS | Ingress HTTPS traffic |
+
+| Host Port | Container Port | Service | Purpose               |
+| --------- | -------------- | ------- | --------------------- |
+| 80        | 80             | HTTP    | Ingress HTTP traffic  |
+| 443       | 443            | HTTPS   | Ingress HTTPS traffic |
 
 **Use Cases:**
+
 ```bash
 # ทดสอบ HTTP ingress
 curl http://localhost/some-path
 
-# ทดสอบ HTTPS ingress  
+# ทดสอบ HTTPS ingress
 curl -k https://localhost/some-path
 ```
 
 ### 🐘 Kafka Internal Ports
-| Host Port | Container Port | Service | Purpose |
-|-----------|---------------|---------|---------|
-| 9092 | 9092 | Kafka Bootstrap | Internal client connections |
-| 9093 | 9093 | Kafka Brokers | Inter-broker communication |
+
+| Host Port | Container Port | Service         | Purpose                     |
+| --------- | -------------- | --------------- | --------------------------- |
+| 9092      | 9092           | Kafka Bootstrap | Internal client connections |
+| 9093      | 9093           | Kafka Brokers   | Inter-broker communication  |
 
 **Use Cases:**
+
 ```bash
 # เชื่อมต่อจาก applications ใน cluster
 kubectl run kafka-client --image=confluentinc/cp-kafka:latest --rm -it -- \
@@ -5224,12 +5552,14 @@ kubectl run kafka-client --image=confluentinc/cp-kafka:latest --rm -it -- \
 ```
 
 ### 🚀 Kafka External Ports
-| Host Port | Container Port | Service | Purpose |
-|-----------|---------------|---------|---------|
-| 30092 | 30092 | Kafka External | External client access |
-| 30093 | 30093 | Kafka External | External client access |
+
+| Host Port | Container Port | Service        | Purpose                |
+| --------- | -------------- | -------------- | ---------------------- |
+| 30092     | 30092          | Kafka External | External client access |
+| 30093     | 30093          | Kafka External | External client access |
 
 **Use Cases:**
+
 ```bash
 # เชื่อมต่อจาก external applications
 kafka-console-producer.sh --broker-list localhost:30092 --topic external-topic
@@ -5240,11 +5570,13 @@ docker run -it --network host confluentinc/cp-kafka:latest \
 ```
 
 ### 🎨 Argo CD UI Port
-| Host Port | Container Port | Service | Purpose |
-|-----------|---------------|---------|---------|
-| 30080 | 30080 | Argo CD UI | Web interface access |
+
+| Host Port | Container Port | Service    | Purpose              |
+| --------- | -------------- | ---------- | -------------------- |
+| 30080     | 30080          | Argo CD UI | Web interface access |
 
 **Use Cases:**
+
 ```bash
 # Access Argo CD UI
 # Browser: http://localhost:30080
@@ -5259,37 +5591,43 @@ docker run -it --network host confluentinc/cp-kafka:latest \
 ### 🏗️ Single Node vs Multi-Node
 
 #### Single Node (Current)
+
 ```yaml
 nodes:
-- role: control-plane            # Control plane + worker in one node
+  - role: control-plane # Control plane + worker in one node
 ```
 
 **Advantages:**
+
 - 💾 **Memory Efficient:** ใช้ ~2-4GB RAM
 - ⚡ **Fast Startup:** สร้าง cluster ภายใน 1-2 นาที
 - 🎯 **Simple:** Configuration ง่าย, เข้าใจง่าย
 - 🔧 **Development Focus:** เหมาะกับ POC และ testing
 
 **Disadvantages:**
+
 - ❌ **No HA:** Single point of failure
 - ❌ **Limited Resources:** CPU/Memory constraints
 - ❌ **Not Production Ready:** ไม่เหมาะ production workloads
 
 #### Multi-Node Alternative
+
 ```yaml
 nodes:
-- role: control-plane            # Dedicated control plane
-  extraPortMappings: [...]
-- role: worker                  # Worker node 1
-- role: worker                  # Worker node 2
+  - role: control-plane # Dedicated control plane
+    extraPortMappings: [...]
+  - role: worker # Worker node 1
+  - role: worker # Worker node 2
 ```
 
 **Advantages:**
+
 - ✅ **High Availability:** Tolerates node failures
 - ✅ **More Resources:** Distributed CPU/Memory
 - ✅ **Production Ready:** Closer to production setup
 
 **Disadvantages:**
+
 - 💾 **Resource Intensive:** Requires ~8-12GB RAM
 - ⏳ **Slower Setup:** Takes longer to initialize
 - 🔧 **Complex Configuration:** More complex networking
@@ -5297,31 +5635,37 @@ nodes:
 ### 🌐 Port Mapping Strategy
 
 #### Direct Mapping (Current)
+
 ```yaml
 - containerPort: 80
-  hostPort: 80                  # 1:1 mapping
+  hostPort: 80 # 1:1 mapping
 ```
 
 **Advantages:**
+
 - 🎯 **Simple:** Easy to understand and configure
 - 🚀 **Direct Access:** No additional routing needed
 - ⚡ **Low Latency:** Direct host access
 
 **Disadvantages:**
+
 - 🔒 **Port Conflicts:** May conflict with host services
 - 🔓 **Security:** Exposes ports directly on host
 
 #### Offset Mapping Alternative
+
 ```yaml
 - containerPort: 80
-  hostPort: 30080               # Offset mapping
+  hostPort: 30080 # Offset mapping
 ```
 
 **Advantages:**
+
 - 🔒 **Fewer Conflicts:** Uses high-numbered ports
 - 🔐 **Better Security:** Less likely to conflict with system ports
 
 **Disadvantages:**
+
 - 🔄 **Inconsistent:** Need to remember port mappings
 - 📝 **Documentation:** Requires clear documentation
 
@@ -5330,80 +5674,83 @@ nodes:
 ## 🔧 Customization Options
 
 ### 🎛️ Add Custom Services
+
 ```yaml
 # เพิ่ม services อื่นๆ
 extraPortMappings:
-# Existing mappings...
-- containerPort: 8080          # Custom application
-  hostPort: 30081
-  protocol: TCP
-- containerPort: 5000          # API endpoint
-  hostPort: 30082
-  protocol: TCP
-- containerPort: 3000          # Development server
-  hostPort: 30083
-  protocol: TCP
+  # Existing mappings...
+  - containerPort: 8080 # Custom application
+    hostPort: 30081
+    protocol: TCP
+  - containerPort: 5000 # API endpoint
+    hostPort: 30082
+    protocol: TCP
+  - containerPort: 3000 # Development server
+    hostPort: 30083
+    protocol: TCP
 ```
 
 ### 🌍 Multi-Cluster Configuration
+
 ```yaml
 # clusters/kind-config-frontend.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-- role: control-plane
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-  - containerPort: 3000       # Frontend app
-    hostPort: 3000
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+      - containerPort: 3000 # Frontend app
+        hostPort: 3000
 ```
 
 ```yaml
-# clusters/kind-config-backend.yaml  
+# clusters/kind-config-backend.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-- role: control-plane
-  extraPortMappings:
-  - containerPort: 8080       # Backend API
-    hostPort: 8080
-  - containerPort: 9092       # Kafka
-    hostPort: 9092
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 8080 # Backend API
+        hostPort: 8080
+      - containerPort: 9092 # Kafka
+        hostPort: 9092
 ```
 
 ### 🏗️ Production-like Configuration
+
 ```yaml
 # production-kind-config.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-- role: control-plane
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-  - containerPort: 443
-    hostPort: 443
-- role: worker                # Add worker nodes
-  extraPortMappings:
-  - containerPort: 9092       # Kafka on worker
-    hostPort: 9092
-- role: worker                # Another worker
-  extraPortMappings:
-  - containerPort: 30080      # Argo CD on worker
-    hostPort: 30080
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+      - containerPort: 443
+        hostPort: 443
+  - role: worker # Add worker nodes
+    extraPortMappings:
+      - containerPort: 9092 # Kafka on worker
+        hostPort: 9092
+  - role: worker # Another worker
+    extraPortMappings:
+      - containerPort: 30080 # Argo CD on worker
+        hostPort: 30080
 
 # Networking configuration
 networking:
   # Customize pod subnet
   podSubnet: "10.244.0.0/16"
-  # Customize service subnet  
+  # Customize service subnet
   serviceSubnet: "10.96.0.0/12"
 ```
 
@@ -5412,6 +5759,7 @@ networking:
 ## 🚀 การใช้งาน
 
 ### 📋 Basic Usage
+
 ```bash
 # สร้าง cluster ด้วย config file
 kind create cluster --name kafka-poc --config scripts/kind-config.yaml
@@ -5427,6 +5775,7 @@ docker port kafka-poc-control-plane
 ```
 
 ### 🔍 Port Validation
+
 ```bash
 # ตรวจสอบว่า ports ถูก map ถูกต้อง
 docker ps --format "table {{.Names}}\t{{.Ports}}" | grep kafka-poc
@@ -5436,6 +5785,7 @@ docker ps --format "table {{.Names}}\t{{.Ports}}" | grep kafka-poc
 ```
 
 ### 🌐 Testing Port Access
+
 ```bash
 # ทดสอบ Kafka bootstrap
 telnet localhost 9092
@@ -5455,10 +5805,11 @@ curl -I http://localhost
 ## 🚨 Troubleshooting
 
 ### 🔍 Port Conflict Issues
+
 ```bash
 # ❌ Problem: Port already in use
-Error: failed to create cluster: node "kafka-poc-control-plane" failed: 
-failed to create container: Error response from daemon: 
+Error: failed to create cluster: node "kafka-poc-control-plane" failed:
+failed to create container: Error response from daemon:
 driver failed programming external connectivity on endpoint
 
 # ✅ Solution 1: ตรวจสอบและ kill process
@@ -5471,6 +5822,7 @@ kill -9 <PID>
 ```
 
 ### 🐳 Docker Issues
+
 ```bash
 # ❌ Problem: Docker daemon issues
 Error: Cannot connect to the Docker daemon
@@ -5490,9 +5842,10 @@ docker system prune
 ```
 
 ### 🔧 Configuration Errors
+
 ```bash
 # ❌ Problem: Invalid YAML
-Error: failed to load config: error unmarshaling JSON: while decoding JSON: 
+Error: failed to load config: error unmarshaling JSON: while decoding JSON:
 json: cannot unmarshal string into Go value of type map[string]interface {}
 
 # ✅ Solution: Validate YAML
@@ -5509,6 +5862,7 @@ python -c 'import yaml, sys; yaml.safe_load(sys.stdin)' < scripts/kind-config.ya
 ```
 
 ### 🏗️ Node Issues
+
 ```bash
 # ❌ Problem: Node not ready
 kubectl get nodes
@@ -5528,6 +5882,7 @@ docker logs kafka-poc-control-plane
 ## 📊 Monitoring และ Maintenance
 
 ### 📈 Cluster Health Monitoring
+
 ```bash
 # ตรวจสอับ cluster health
 kubectl cluster-info
@@ -5542,6 +5897,7 @@ kubectl get pods -n kube-system
 ```
 
 ### 🔧 Maintenance Commands
+
 ```bash
 # Backup configuration
 cp scripts/kind-config.yaml scripts/kind-config.yaml.backup
@@ -5555,22 +5911,23 @@ docker volume prune -f
 ```
 
 ### 📊 Performance Optimization
+
 ```yaml
 # performance-kind-config.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
-- role: control-plane
-  # ปรับ kubelet สำหรับ performance
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
-        max-pods: "200"            # เพิ่ม pod capacity
-        pod-infra-container-image: "registry.k8s.io/pause:3.9"
-  extraPortMappings: [...]
+  - role: control-plane
+    # ปรับ kubelet สำหรับ performance
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+            max-pods: "200"            # เพิ่ม pod capacity
+            pod-infra-container-image: "registry.k8s.io/pause:3.9"
+    extraPortMappings: [...]
 ```
 
 ---
@@ -5578,6 +5935,7 @@ nodes:
 ## 🎯 Best Practices
 
 ### 📋 Configuration Best Practices
+
 ```yaml
 # ✅ Good configuration practices:
 1. Use descriptive names for clusters
@@ -5588,6 +5946,7 @@ nodes:
 ```
 
 ### 🔒 Security Considerations
+
 ```yaml
 # 🛡️ Security recommendations:
 1. Limit exposed ports to what's necessary
@@ -5598,13 +5957,14 @@ nodes:
 ```
 
 ### 📚 Documentation Standards
+
 ```yaml
 # 📝 Documentation guidelines:
 # Port Mapping Registry:
 # Service           | Host Port | Container Port | Description
 #------------------|-----------|----------------|-------------
 # HTTP Ingress      | 80        | 80              | Web traffic
-# HTTPS Ingress     | 443       | 443             | Secure traffic  
+# HTTPS Ingress     | 443       | 443             | Secure traffic
 # Kafka Bootstrap   | 9092      | 9092            | Kafka internal
 # Kafka External    | 30092     | 30092           | External Kafka
 # Argo CD UI        | 30080     | 30080           | GitOps interface
@@ -5615,18 +5975,21 @@ nodes:
 ## 📚 เอกสารประกอบเพิ่มเติม
 
 ### 🔗 Official Resources
+
 - **Kind Documentation:** https://kind.sigs.k8s.io/
 - **Configuration Guide:** https://kind.sigs.k8s.io/docs/user/configuration/
 - **Port Mapping:** https://kind.sigs.k8s.io/docs/user/configuration/#port-mapping
 - **Known Issues:** https://kind.sigs.k8s.io/docs/user/known-issues/
 
 ### 🎯 Advanced Topics
+
 - **Multi-cluster Setups:** Managing multiple kind clusters
 - **Network Policies:** Securing cluster communication
 - **Storage Configuration:** Persistent volumes and storage classes
 - **Ingress Controllers:** NGINX, Traefik, and other ingress options
 
 ### 🔄 Integration Examples
+
 ```bash
 # Integration with other tools:
 docker compose up -d          # Run alongside Docker Compose
@@ -5637,11 +6000,13 @@ k3d cluster create           # Use k3d as alternative
 ---
 
 **🎉 Configuration นี้มอบให้คุณ:**
+
 - ✅ Kubernetes cluster พร้อมใช้งานภายในนาที
 - ✅ Port access สำหรับ Kafka, Argo CD, และ ingress
 - ✅ Environment ที่เหมาะสำหรับ development และ POC
 - ✅ Foundation สำหรับ GitOps workflows
 - ✅ Easy setup และ maintenance
+
 ```
 
 ผมได้สร้างเอกสารคู่มือทั้งหมดในโฟลเดอร์ scripts แล้วครับ ประกอบด้วย:
@@ -5657,7 +6022,7 @@ k3d cluster create           # Use k3d as alternative
 
 แต่ละเอกสารมีรายละเอียดครบถ้วน:
 - 📖 วัตถุประสงค์และภาพรวม
-- 🏗️ การทำงานและ architecture  
+- 🏗️ การทำงานและ architecture
 - 🚋 วิธีการใช้งาน step-by-step
 - 📊 ตัวอย่าง output และผลลัพธ์
 - 🚨 troubleshooting และการแก้ปัญหา
@@ -5666,3 +6031,4 @@ k3d cluster create           # Use k3d as alternative
 - 📚 เอกสารอ้างอิงเพิ่มเติม
 
 ทุกเอกสารเขียนเป็นภาษาไทย อธิบายอย่างละเอียด พร้อมตัวอย่าง code และ diagrams เพื่อความเข้าใจที่ง่ายขึ้นครับ
+```

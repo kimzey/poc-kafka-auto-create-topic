@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # test-topics.sh
@@ -18,6 +17,26 @@ NAMESPACE="strimzi"
 CLUSTER_NAME="my-cluster"
 TOPICS_DIR="topics"
 BOOTSTRAP_SERVER="localhost:9092"
+
+# Resolve Kafka broker pod name (works with NodePools)
+get_kafka_broker_pod() {
+    # Prefer deriving from StatefulSet to be robust with NodePools
+    local sts
+    sts=$(kubectl -n "$NAMESPACE" get sts -l strimzi.io/cluster="$CLUSTER_NAME" \
+        -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' 2>/dev/null | head -n1)
+    if [[ -n "$sts" ]]; then
+        echo "${sts}-0"
+        return 0
+    fi
+
+    # Fallback: list pods and pick the first broker/controller pod
+    kubectl -n "$NAMESPACE" get pods \
+      -l strimzi.io/cluster="$CLUSTER_NAME" \
+      -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' \
+    | grep -Ev '(entity-operator|kafka-exporter|cruise-control|connect|bridge|mm2|zookeeper)' \
+    | grep -E -- '-[0-9]+$' \
+    | head -n1
+}
 
 # Test results
 TESTS_PASSED=0
@@ -75,7 +94,15 @@ check_prerequisites() {
         exit 1
     fi
 
-    print_status "Prerequisites check passed!"
+    # Discover broker pod
+    BROKER_POD=$(get_kafka_broker_pod)
+    if [[ -z "$BROKER_POD" ]]; then
+        print_error "Cannot find Kafka broker pod in namespace '$NAMESPACE'"
+        kubectl -n "$NAMESPACE" get pods -l strimzi.io/cluster="$CLUSTER_NAME"
+        exit 1
+    fi
+
+    print_status "Prerequisites check passed! Broker pod: $BROKER_POD"
 }
 
 # Test 1: Topic creation via YAML
@@ -93,7 +120,7 @@ metadata:
     strimzi.io/cluster: "$CLUSTER_NAME"
 spec:
   partitions: 3
-  replicas: 3
+  replicas: 1
   config:
     retention.ms: 3600000
 EOF
@@ -117,7 +144,7 @@ EOF
     fi
 
     # Verify topic exists in Kafka
-    if kubectl exec $CLUSTER_NAME-kafka-0 -n $NAMESPACE -- kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic-creation &> /dev/null; then
+    if kubectl exec "$BROKER_POD" -n "$NAMESPACE" -- /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic-creation &> /dev/null; then
         print_success "Topic verified in Kafka cluster"
     else
         print_failure "Topic not found in Kafka cluster"
@@ -129,13 +156,16 @@ EOF
 test_topic_config_update() {
     print_test "Testing topic configuration update..."
 
-    # Update topic partitions
-    kubectl patch kafkatopic test-topic-creation -n $NAMESPACE -p '{"spec":{"partitions":6}}'
+    # Update topic partitions using merge patch (supported by Strimzi CRD)
+    kubectl patch kafkatopic test-topic-creation -n $NAMESPACE \
+        --type=merge \
+        -p '{"spec":{"partitions":6}}'
 
     sleep 10
 
-    # Check if partitions increased
-    PARTITIONS=$(kubectl exec $CLUSTER_NAME-kafka-0 -n $NAMESPACE -- kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic-creation | grep "PartitionCount" | awk '{print $2}')
+    # Check if partitions increased (parse PartitionCount from describe)
+    PARTITIONS=$(kubectl exec "$BROKER_POD" -n "$NAMESPACE" -- /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic-creation \
+        | sed -nE 's/.*PartitionCount: ([0-9]+).*/\1/p' | head -n1)
 
     if [[ "$PARTITIONS" == "6" ]]; then
         print_success "Topic partitions updated successfully (6 partitions)"
@@ -152,12 +182,12 @@ test_message_flow() {
     # Produce test message
     TEST_MESSAGE="test-message-$(date +%s)"
 
-    echo "$TEST_MESSAGE" | kubectl exec -i $CLUSTER_NAME-kafka-0 -n $NAMESPACE -- kafka-console-producer.sh --broker-list localhost:9092 --topic test-topic-creation &> /dev/null
+    echo "$TEST_MESSAGE" | kubectl exec -i "$BROKER_POD" -n "$NAMESPACE" -- /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test-topic-creation &> /dev/null
 
     sleep 2
 
     # Consume message
-    CONSUMED_MESSAGE=$(kubectl exec $CLUSTER_NAME-kafka-0 -n $NAMESPACE -- kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-topic-creation --from-beginning --max-messages 1 --timeout-ms 5000 2>/dev/null | tr -d '\n')
+    CONSUMED_MESSAGE=$(kubectl exec "$BROKER_POD" -n "$NAMESPACE" -- /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test-topic-creation --from-beginning --max-messages 1 --timeout-ms 5000 2>/dev/null | tr -d '\n')
 
     if [[ "$CONSUMED_MESSAGE" == "$TEST_MESSAGE" ]]; then
         print_success "Message production and consumption successful"
@@ -177,7 +207,7 @@ test_topic_deletion() {
     sleep 10
 
     # Check if topic is deleted from Kafka
-    if ! kubectl exec $CLUSTER_NAME-kafka-0 -n $NAMESPACE -- kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic-creation &> /dev/null; then
+    if ! kubectl exec "$BROKER_POD" -n "$NAMESPACE" -- /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test-topic-creation &> /dev/null; then
         print_success "Topic deleted successfully"
     else
         print_failure "Topic still exists in Kafka cluster"
@@ -200,7 +230,7 @@ metadata:
     strimzi.io/cluster: "$CLUSTER_NAME"
 spec:
   partitions: 2
-  replicas: 3
+  replicas: 1
   config:
     retention.ms: 1800000
 EOF
@@ -208,7 +238,7 @@ EOF
     sleep 5
 
     # Apply again (should not fail)
-    if kubectl apply -f - <<EOF
+    if kubectl apply -f - >/dev/null 2>&1 <<EOF
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
@@ -218,10 +248,11 @@ metadata:
     strimzi.io/cluster: "$CLUSTER_NAME"
 spec:
   partitions: 2
-  replicas: 3
+  replicas: 1
   config:
     retention.ms: 1800000
-EOF &> /dev/null; then
+EOF
+    then
         print_success "Idempotent operations working correctly"
     else
         print_failure "Idempotent operations failed"
@@ -299,7 +330,7 @@ test_config_validation() {
     print_test "Testing configuration validation..."
 
     # Test invalid configuration (should fail)
-    if kubectl apply -f - <<EOF &> /dev/null
+    if kubectl apply -f - >/dev/null 2>&1 <<EOF
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
@@ -312,7 +343,8 @@ spec:
   replicas: 5  # More replicas than brokers (should fail)
   config:
     retention.ms: -1000  # Invalid retention
-EOF; then
+EOF
+    then
         print_failure "Invalid configuration was accepted"
         return 1
     else

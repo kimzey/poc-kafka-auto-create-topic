@@ -13,7 +13,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/your-org/poc-kafka-topics.git
+    repoURL: git@github.com:kimzey/poc-kafka-auto-create-topic.git
     targetRevision: HEAD
     path: topics
     directory:
