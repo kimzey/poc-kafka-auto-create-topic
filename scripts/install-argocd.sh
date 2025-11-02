@@ -105,22 +105,7 @@ wait_for_argocd() {
 
     # Wait for Argo CD application controller (StatefulSet in v2.8+)
     print_status "Waiting for argocd-application-controller (StatefulSet)..."
-    # Fast-path: if already ready, don't block
-    local desired ready
-    desired=$(kubectl -n argocd get sts/argocd-application-controller -o jsonpath='{.spec.replicas}' 2>/dev/null || echo "")
-    ready=$(kubectl -n argocd get sts/argocd-application-controller -o jsonpath='{.status.readyReplicas}' 2>/dev/null || echo "0")
-    if [ -n "$desired" ] && [ "${ready:-0}" = "$desired" ]; then
-        echo "statefulset.apps/argocd-application-controller condition met"
-    elif ! kubectl wait --for=condition=Ready --timeout=600s statefulset/argocd-application-controller -n argocd; then
-        print_warning "kubectl wait on StatefulSet failed; falling back to rollout status and pod readiness"
-        # Fallback 1: rollout status
-        if ! kubectl rollout status statefulset/argocd-application-controller -n argocd --timeout=600s; then
-            print_warning "rollout status did not report success; checking pod readiness by label"
-        fi
-        # Fallback 2: wait for at least 1 controller pod Ready
-        kubectl wait -n argocd --for=condition=Ready pod \
-            -l app.kubernetes.io/name=argocd-application-controller --timeout=600s || true
-    fi
+
 
     # Wait for Argo CD repo server
     print_status "Waiting for argocd-repo-server..."

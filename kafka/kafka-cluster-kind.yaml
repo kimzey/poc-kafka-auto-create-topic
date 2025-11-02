@@ -42,8 +42,8 @@ spec:
       auto.create.topics.enable: false
 
     jvmOptions:
-      xms: 512m
-      xmx: 512m
+      -Xms: 512m
+      -Xmx: 512m
 
   entityOperator:
     topicOperator: {}
