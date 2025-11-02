@@ -1,0 +1,52 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: config-create
+  namespace: strimzi
+  labels:
+    strimzi.io/cluster: "my-cluster"
+    app: config-service
+    environment: poc
+    data-type: updates
+    criticality: medium
+    throughput: high
+spec:
+  partitions: 1 # Higher partition count for better parallelism
+  replicas: 1
+  config:
+    # Retention settings - shorter retention for high-volume data
+    retention.ms: 86400000 # 24 hours in milliseconds
+    segment.bytes: 536870912 # 512MB segments (smaller for faster compaction)
+    retention.bytes: 10737418240 # 10GB max size to prevent disk issues
+
+    # Cleanup policy
+    cleanup.policy: "delete" # Delete old segments only
+    delete.retention.ms: 3600000 # 1 hour retention for deleted records
+
+    # Performance tuning for high throughput (topic-level only)
+    compression.type: "zstd" # Best compression ratio for high volume
+    max.message.bytes: 1048576 # 1MB max message size
+
+    # Remove broker-level I/O thread/socket settings (not topic-scoped)
+
+    # Replication and durability
+    min.insync.replicas: 1 # Single-broker kind cluster
+
+    # Remove consumer client configs (not topic-scoped)
+
+    # Index and segment settings
+    index.interval.bytes: 8192 # Index every 8KB for better performance
+    segment.ms: 3600000 # Roll segments every hour
+
+    # Monitoring and observability
+    message.timestamp.type: "CreateTime"
+
+    # Remove quota policies (broker-level)
+
+    # Additional performance settings (topic-level only)
+    flush.messages: 10000 # Flush every 10K messages
+    flush.ms: 1000 # Flush at least every second
+
+    # Remove producer client configs (not topic-scoped)
+
+    # Background operations (broker-level defaults removed)
