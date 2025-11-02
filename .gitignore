@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Argo CD binary artifacts (do not commit CLI downloads)
+argocd-darwin-*
+argocd-linux-*
+
+# Logs
+logs/
+*.log
+
+# Local backups
+backups/
